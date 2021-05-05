@@ -1,0 +1,12 @@
+description: Install and authenticate with the gh cli. This command should be ran before invoking the gh cli.
+parameters:
+    version:
+        type: string
+        default: "1.9.2"
+        description: Specify the full semver versioned tag to use.
+steps:
+  - run:
+      environment:
+          PARAM_GH_CLI_VERSION: <<parameters.version>>
+      name: Install and authenticate GH CLI
+      command: <<include(scripts/setup.sh)>>
