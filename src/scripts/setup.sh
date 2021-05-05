@@ -30,7 +30,7 @@ if ! command -v gh >/dev/null 2>&1; then
 			;;
 		linux_arm)
 			curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_linux_arm64.tar.gz" -o "gh-cli.tar.gz"
-			$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/
+			$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
 			;;
 		*)
 		echo "This orb does not currently support your platform. If you believe it should, please consider opening an issue on the GitHub repository:"
