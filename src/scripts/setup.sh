@@ -50,5 +50,5 @@ else
 fi
 
 # Authenticate
-gh auth login <<< "$PARAM_GH_TOKEN"
+gh auth login --with-token <<< "$PARAM_GH_TOKEN"
 gh auth status
