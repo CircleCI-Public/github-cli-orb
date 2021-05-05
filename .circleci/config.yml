@@ -44,7 +44,8 @@ jobs:
         type: executor
     executor: <<parameters.executor>>
     steps:
-      - github-cli/setup
+      - github-cli/setup:
+          token: GHI_TOKEN
       - run:
           name: verify Install
           command: command -v gh
@@ -85,6 +86,7 @@ workflows:
     jobs:
       # Run any integration tests defined within the `jobs` key.
       - integration-test-1:
+          context: orb-publisher
           matrix:
             parameters:
               executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos", "arm"]

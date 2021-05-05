@@ -1,5 +1,9 @@
 #!/bin/bash
+# set smart sudo
 if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
+
+# Get auth token
+PARAM_GH_TOKEN=$(eval echo "$PARAM_GH_TOKEN")
 
 # Define current platform
 if uname -a | grep "Darwin"; then
@@ -44,3 +48,8 @@ if ! command -v gh >/dev/null 2>&1; then
 else
 	echo "GH CLI is already installed."
 fi
+
+# Authenticate
+gh auth login <<< "$PARAM_GH_TOKEN"
+
+echo "Authenticated. You may now use the gh cli"

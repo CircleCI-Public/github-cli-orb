@@ -4,9 +4,16 @@ parameters:
         type: string
         default: "1.9.2"
         description: Specify the full semver versioned tag to use.
+    token:
+        type: env_var_name
+        default: "GITHUB_TOKEN"
+        description: |
+          Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
+          It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
 steps:
   - run:
       environment:
           PARAM_GH_CLI_VERSION: <<parameters.version>>
+          PARAM_GH_TOKEN: <<parameters.token>>
       name: Install and authenticate GH CLI
       command: <<include(scripts/setup.sh)>>
