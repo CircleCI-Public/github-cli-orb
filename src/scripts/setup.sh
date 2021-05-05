@@ -51,5 +51,4 @@ fi
 
 # Authenticate
 gh auth login <<< "$PARAM_GH_TOKEN"
-
-echo "Authenticated. You may now use the gh cli"
+gh auth status
