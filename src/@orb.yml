@@ -3,7 +3,6 @@ version: 2.1
 description: |
   Manage your GitHub projects in your CI pipeline with the Github CLI orb integration.
 
-# This information will be displayed in the orb registry and is not mandatory.
 display:
   home_url: "https://cli.github.com/manual/"
   source_url: "https://github.com/CircleCI-Public/github-cli-orb"

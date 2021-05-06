@@ -3,7 +3,6 @@
 [![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/github-cli-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/CircleCI-Public/github-cli-orb) [![CircleCI Orb Version](https://badges.circleci.com/orbs/circleci/github-cli)](https://circleci.com/orbs/registry/orb/circleci/github-cli) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/CircleCI-Public/github-cli-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
 
-
 Utilize the GitHub CLI (gh) to maintain and manage your GitHub operations from within your CircleCI CI/CD pipeline.
 
 
