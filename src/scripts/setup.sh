@@ -3,8 +3,7 @@
 if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
 
 # Get auth token
-PARAM_TOKEN_NAME=${!PARAM_GH_TOKEN}
-PARAM_GH_TOKEN=${!PARAM_TOKEN_NAME}
+PARAM_GH_TOKEN=${!PARAM_GH_TOKEN}
 
 # Define current platform
 if uname -a | grep "Darwin"; then
@@ -45,15 +44,20 @@ if ! command -v gh >/dev/null 2>&1; then
 	;;
 	esac
 	# Validate install.
+	echo
 	echo "GH CLI installed"
 	command -v gh
 else
 	echo "GH CLI is already installed."
 fi
 
-# Configure
-gh config set prompt disabled
-
 # Authenticate
+echo
+echo "Authenticating GH CLI"
 gh auth login --with-token <<< "$PARAM_GH_TOKEN"
 gh auth status
+
+# Configure
+echo
+echo "Disabling interactive prompts for GH CLI"
+gh config set prompt disabled
