@@ -15,4 +15,6 @@ parameters:
 steps:
   - run:
       name: Cloning repository
-      command: gh repo clone <<parameters.repo>> <<parameters.dir>>
+      command: |
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        gh repo clone <<parameters.repo>> <<parameters.dir>>
