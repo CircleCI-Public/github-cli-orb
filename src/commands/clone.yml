@@ -8,7 +8,11 @@ parameters:
         type: string
         default: "$CIRCLE_REPOSITORY_URL"
         description: Enter either the name of the repository or the full repository URL. Will default to the current project.
+    dir:
+        type: string
+        default: "."
+        description: Select the path to clone into. By default the current path will be selected, which is dictated by the job's "working_directory".
 steps:
   - run:
       name: Cloning repository
-      command: gh repo clone <<parameters.repo>> .
+      command: gh repo clone <<parameters.repo>> <<parameters.dir>>
