@@ -1,0 +1,25 @@
+description: >
+  Use the GitHub CLI to issue a new release as a part of your CircleCI pipeline.
+  In this example, on every commit (merge) to the "main" branch, we will use the config to specify the desired tag and issue a release.
+usage:
+  version: 2.1
+  orbs:
+    gh: circleci/github-cli@1.0
+    node: circleci/node@4.3
+  workflows:
+    test-and-deploy:
+      jobs:
+        - node/test
+        - gh/release:
+            tag: "1.0.0"
+            title: "The initial release"
+            notes-file: changelog.md
+            # Supply a context or set project level environment variables containing your GITHUB_TOKEN.
+            context:
+              - GITHUB_CREDS
+            requires:
+              - node/test
+            filters:
+              branches:
+                only:
+                  - main

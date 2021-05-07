@@ -1,8 +1,5 @@
 description: >
   Simply install the Github CLI for manual usage.
-# Provide a use-case based example for using this orb.
-# Everything in the `usage` section will be displayed in the orb registry.
-# Comments are not retained.
 usage:
   version: 2.1
   orbs:
@@ -12,14 +9,15 @@ usage:
       docker:
         - image: cimg/base:stable
       steps:
-        - checkout
         # Run the setup command to install and authenticate the GitHub CLI
         - gh/setup
+        # The gh cli has been installed and you can now use it in your run steps.
         - run:
             name: Create Pull Request
             command: |
-              # The gh cli has been installed and you can now use it in your run steps.
               gh pr create --title "Bugfix from $CIRCLE_BRANCH"
+        # You can also use other gh orb commands, like the "clone" command, an alternative to the native CircleCI "checkout" command.
+        - gh/clone
   workflows:
     use-my-orb:
       jobs:
