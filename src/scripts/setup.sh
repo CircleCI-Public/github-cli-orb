@@ -3,7 +3,7 @@
 if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
 
 # Get auth token
-PARAM_GH_TOKEN=$(eval echo "$PARAM_GH_TOKEN")
+PARAM_GH_TOKEN=${!$PARAM_GH_TOKEN}
 
 # Define current platform
 if uname -a | grep "Darwin"; then
@@ -28,13 +28,14 @@ if ! command -v gh >/dev/null 2>&1; then
 			rm gh-cli.deb
 			;;
 		macos)
-			curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_macOS_amd64.tar.gz" -o "gh-cli.pkg"
-			$SUDO installer -pkg ./gh-cli.pkg -target /
-			rm gh-cli.pkg
+			curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_macOS_amd64.tar.gz" -o "gh-cli.tar.gz"
+			$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
+			rm gh-cli.tar.gz
 			;;
 		linux_arm)
 			curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_linux_arm64.tar.gz" -o "gh-cli.tar.gz"
 			$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
+			rm gh-cli.tar.gz
 			;;
 		*)
 		echo "This orb does not currently support your platform. If you believe it should, please consider opening an issue on the GitHub repository:"
