@@ -1,7 +1,6 @@
 description: |
   A GitHub specific alternative to CircleCI's native "checkout" command.
   Use the GitHub CLI to clone the current repository, or specify an alternative repo via parameters.
-  Utilizes token based authentication, not SSH. Ensure the "setup" command is run first for authentication.
   https://cli.github.com/manual/gh_repo_clone
 parameters:
     repo:
@@ -16,5 +15,4 @@ steps:
   - run:
       name: Cloning repository
       command: |
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
         gh repo clone <<parameters.repo>> <<parameters.dir>>
