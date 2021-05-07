@@ -3,7 +3,8 @@
 if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
 
 # Get auth token
-PARAM_GH_TOKEN=${!$PARAM_GH_TOKEN}
+PARAM_TOKEN_NAME=${!PARAM_GH_TOKEN}
+PARAM_GH_TOKEN=${!PARAM_TOKEN_NAME}
 
 # Define current platform
 if uname -a | grep "Darwin"; then
