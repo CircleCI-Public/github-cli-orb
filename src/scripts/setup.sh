@@ -49,6 +49,9 @@ else
 	echo "GH CLI is already installed."
 fi
 
+# Configure
+gh config set prompt disabled
+
 # Authenticate
 gh auth login --with-token <<< "$PARAM_GH_TOKEN"
 gh auth status
