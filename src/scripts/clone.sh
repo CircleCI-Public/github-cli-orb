@@ -5,5 +5,5 @@ echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6Tb
 # GITHUB_CLONE_URL=${!PARAM_GH_REPO}
 echo "DEBUG"
 echo PARAM_GH_REPO: "$PARAM_GH_REPO"
-echo Expanded: "eval ${PARAM_GH_REPO}"
+echo Expanded: "eval echo $PARAM_GH_REPO"
 gh repo clone "$CIRCLE_REPOSITORY_URL" "$PARAM_GH_DIR"
