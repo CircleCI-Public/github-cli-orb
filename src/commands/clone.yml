@@ -14,5 +14,7 @@ parameters:
 steps:
   - run:
       name: Cloning repository
-      command: |
-        gh repo clone <<parameters.repo>> <<parameters.dir>>
+      environment:
+        PARAM_GH_REPO: <<parameters.repo>>
+        PARAM_GH_DIR: <<parameters.dir>>
+      command: <<include(scripts/clone.sh)>>
