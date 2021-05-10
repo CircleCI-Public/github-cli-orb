@@ -12,7 +12,7 @@ parameters:
     type: string
     description: "Select a tag to create a release from. If a matching git tag does not yet exist, one will automatically get created from the latest state of the default branch."
   notes-file:
-    description: "Path to file containing release notes (e.g.: ./changelog.md). (OPTIONAL)"
+    description: "Path to file containing release notes (e.g.: ./changelog.md). "
     default: ""
     type: string
   draft:
@@ -24,11 +24,11 @@ parameters:
     default: false
     description: Mark the release as a prerelease.
   files:
-    description: "To include a subset of your repository's files in the release, enter the filt glob here. (e.g. ./dist/*.tgz) (OPTIONAL)"
+    description: "To include a subset of your repository's files in the release, enter the filt glob here. (e.g. ./dist/*.tgz) "
     default: ""
     type: string
   title:
-    description: "Include a release title. (OPTIONAL)"
+    description: "Include a release title. "
     type: string
     default: ""
   version:
@@ -36,11 +36,11 @@ parameters:
     default: "1.9.2"
     description: Specify the full semver versioned tag to use for the GitHub CLI installation.
   token:
-      type: env_var_name
-      default: "GITHUB_TOKEN"
-      description: |
-        Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
-        It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
+    type: env_var_name
+    default: "GITHUB_TOKEN"
+    description: |
+      Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
+      It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
 steps:
   - setup:
       version: <<parameters.version>>
