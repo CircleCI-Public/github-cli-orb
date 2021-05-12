@@ -1,10 +1,8 @@
 version: 2.1
 
 orbs:
-  # Replace this with your own!
   github-cli: circleci/github-cli@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.0
-  bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
 
 # Pipeline Parameters
@@ -22,17 +20,42 @@ parameters:
     type: string
     default: "dev:alpha"
 
+executors:
+  docker-x86-debian:
+    docker:
+      - image: cimg/base:stable
+  macos:
+    macos:
+      xcode: 12.4.0
+  arm:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+  linuxvm-x86-debian:
+    machine:
+      image: ubuntu-2004:202101-01
+
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
   integration-test-1:
-    docker:
-      - image: cimg/base:stable
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
     steps:
-      - checkout
-      # "greet" is a sample command packaged with this orb config.
-      # This sample integration test will run as long as the greet command exists. Once you remove the greet command you should remove this line.
-      # Push new changes first, before adding new tests to your config.
-      - github-cli/greet
+      - github-cli/setup:
+          token: GHI_TOKEN
+      - run:
+          name: verify Install
+          command: command -v gh
+      - github-cli/clone
+      - run: ls
+      # Test with a custom repo URL
+      - run: mkdir test2
+      - github-cli/clone:
+          repo: https://github.com/CircleCI-Public/Orb-Project-Template.git
+          dir: ./test2
+      - run: cd ./test2 && ls
 
 workflows:
   # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.
@@ -45,9 +68,6 @@ workflows:
       - shellcheck/check:
           dir: ./src/scripts
           exclude: SC2148
-      # optional: Run BATS tests against your scripts
-      - bats/run:
-          path: ./src/tests
       # Publish development version(s) of the orb.
       - orb-tools/publish-dev:
           orb-name: circleci/github-cli
@@ -55,7 +75,6 @@ workflows:
           requires:
             - orb-tools/lint
             - orb-tools/pack
-            - bats/run
             - shellcheck/check
       # Trigger an integration workflow to test the
       # dev:${CIRCLE_SHA1:0:7} version of your orb
@@ -73,7 +92,11 @@ workflows:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
       # Run any integration tests defined within the `jobs` key.
-      - integration-test-1
+      - integration-test-1:
+          context: orb-publisher
+          matrix:
+            parameters:
+              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos", "arm"]
       # Publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
       # as that will determine whether a patch, minor or major

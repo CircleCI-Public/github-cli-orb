@@ -1,0 +1,20 @@
+description: |
+  A GitHub specific alternative to CircleCI's native "checkout" command.
+  Use the GitHub CLI to clone the current repository, or specify an alternative repo via parameters.
+  https://cli.github.com/manual/gh_repo_clone
+parameters:
+    repo:
+        type: string
+        default: "$CIRCLE_REPOSITORY_URL"
+        description: Enter either the name of the repository or the full repository URL. Will default to the current project.
+    dir:
+        type: string
+        default: "."
+        description: Select the path to clone into. By default the current path will be selected, which is dictated by the job's "working_directory".
+steps:
+  - run:
+      name: Cloning repository
+      environment:
+        PARAM_GH_REPO: <<parameters.repo>>
+        PARAM_GH_DIR: <<parameters.dir>>
+      command: <<include(scripts/clone.sh)>>
