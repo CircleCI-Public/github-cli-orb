@@ -5,6 +5,7 @@ if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
 # Get auth token
 export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
 [ -z "$GITHUB_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
+echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >> "$BASH_ENV"
 # Define current platform
 if uname -a | grep "Darwin"; then
 	export SYS_ENV_PLATFORM=macos
