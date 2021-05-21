@@ -3,8 +3,8 @@
 if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
 
 # Get auth token
-PARAM_GH_TOKEN=${!PARAM_GH_TOKEN}
-[ -z "$PARAM_GH_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
+GH_TOKEN=${!PARAM_GH_TOKEN}
+[ -z "$GH_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
 # Define current platform
 if uname -a | grep "Darwin"; then
 	export SYS_ENV_PLATFORM=macos
@@ -54,7 +54,7 @@ fi
 # Authenticate
 echo
 echo "Authenticating GH CLI"
-gh auth login --with-token <<< "$PARAM_GH_TOKEN"
+gh auth login
 gh auth status
 
 # Configure
