@@ -45,6 +45,7 @@ steps:
   - setup:
       version: <<parameters.version>>
       token: <<parameters.token>>
+  - clone
   - run:
       name: "Creating a <<#parameters.draft>><<parameters.draft>> <</parameters.draft>>GitHub Release"
       environment:
