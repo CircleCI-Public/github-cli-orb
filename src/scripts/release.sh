@@ -11,5 +11,8 @@ fi
 if [ -n "$PARAM_GH_TITLE" ]; then
 	set -- "$@" --title "$PARAM_GH_TITLE"
 fi
+if [ -n "$PARAM_GH_FILES" ]; then
+	set -- "$@" " $PARAM_GH_FILES"
+fi
 
-gh release create "$PARAM_GH_TAG" "$@" "$PARAM_GH_FILES"
+gh release create "$PARAM_GH_TAG" "$@"
