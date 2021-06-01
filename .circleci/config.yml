@@ -105,7 +105,7 @@ workflows:
       # e.g. [semver:patch] will cause a patch version to be published.
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/github-cli
-          context: orb-publishing
+          context: orb-publisher
           add-pr-comment: true
           fail-if-semver-not-indicated: true
           publish-version-tag: true
