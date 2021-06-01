@@ -80,7 +80,7 @@ workflows:
       # dev:${CIRCLE_SHA1:0:7} version of your orb
       - orb-tools/trigger-integration-tests-workflow:
           name: trigger-integration-dev
-          context: orb-publisher
+          context: orb-publishing
           requires:
             - orb-tools/publish-dev
 
@@ -105,10 +105,12 @@ workflows:
       # e.g. [semver:patch] will cause a patch version to be published.
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/github-cli
-          context: orb-publisher
-          add-pr-comment: false
+          context: orb-publishing
+          add-pr-comment: true
           fail-if-semver-not-indicated: true
-          publish-version-tag: false
+          publish-version-tag: true
+          bot-user: orb-pubisher
+          ssh-fingerprints: "c8:62:58:86:3a:ce:3c:5f:49:1b:0c:24:0c:bb:9a:b0"
           requires:
             - integration-test-1
           filters:
