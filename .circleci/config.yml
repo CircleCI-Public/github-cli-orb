@@ -106,9 +106,11 @@ workflows:
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/github-cli
           context: orb-publisher
-          add-pr-comment: false
+          add-pr-comment: true
           fail-if-semver-not-indicated: true
-          publish-version-tag: false
+          publish-version-tag: true
+          bot-user: orb-pubisher
+          ssh-fingerprints: "c8:62:58:86:3a:ce:3c:5f:49:1b:0c:24:0c:bb:9a:b0"
           requires:
             - integration-test-1
           filters:
