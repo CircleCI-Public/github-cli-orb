@@ -56,7 +56,7 @@ fi
 echo
 echo "Authenticating GH CLI"
 git config --global credential.https://github.com.helper ''
-git config --global --add credential.https://github.com.helper "\!$(which gh) auth git-credential"
+git config --global --add credential.https://github.com.helper '!'"$(which gh) auth git-credential"
 gh auth status
 
 # Configure
