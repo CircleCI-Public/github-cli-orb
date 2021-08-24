@@ -7,11 +7,11 @@ export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
 [ -z "$GITHUB_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
 echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >> "$BASH_ENV"
 # Define current platform
-if uname -a | grep "Darwin"; then
+if [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "x86_64" ]]; then
 	export SYS_ENV_PLATFORM=macos
-elif uname -a | grep "x86_64 GNU/Linux"; then
+elif [[ "$(uname -s)" == "Linux" && "$(uname -m)" == "x86_64" ]]; then
 	export SYS_ENV_PLATFORM=linux_x86
-elif uname -a | grep "aarch64 GNU/Linux"; then
+elif [[ "$(uname -s)" == "Linux" && "$(uname -m)" == "aarch64" ]]; then
 	export SYS_ENV_PLATFORM=linux_arm
 else
 	echo "This platform appears to be unsupported."
