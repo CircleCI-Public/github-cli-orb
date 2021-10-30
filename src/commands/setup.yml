@@ -1,4 +1,4 @@
-description: Install and authenticate with the gh cli. This command should be ran before invoking the gh cli.
+description: Install and authenticate with the gh cli. This command should be run before invoking the gh cli.
 parameters:
     version:
         type: string
