@@ -1,7 +1,7 @@
 version: 2.1
 
 description: |
-  Manage your GitHub projects in your CI pipeline with the Github CLI orb integration.
+  Manage your GitHub projects in your CI pipeline with the GitHub CLI orb integration.
 
 display:
   home_url: "https://cli.github.com/manual/"
