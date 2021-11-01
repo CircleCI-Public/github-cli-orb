@@ -6,6 +6,10 @@ if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
 export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
 [ -z "$GITHUB_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
 echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >> "$BASH_ENV"
+# Get hostname
+export GITHUB_HOSTNAME=${!PARAM_GH_HOSTNAME}
+[ -z "$GITHUB_HOSTNAME" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
+echo "export GITHUB_TOKEN=\"${GITHUB_HOSTNAME}\"" >> "$BASH_ENV"
 # Define current platform
 if [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "x86_64" ]]; then
 	export SYS_ENV_PLATFORM=macos
@@ -52,14 +56,23 @@ else
 	echo "GH CLI is already installed."
 fi
 
-# Authenticate
-echo
-echo "Authenticating GH CLI"
-git config --global credential.https://github.com.helper ''
-git config --global --add credential.https://github.com.helper '!'"$(which gh) auth git-credential"
-gh auth status
+# if GITHUB_HOSTNAME is set use login
+if [ -z "$GITHUB_HOSTNAME" ]; then
+	# Authenticate
+	echo
+	echo "Authenticating GH CLI"
+	git config --global credential.https://github.com.helper ''
+	git config --global --add credential.https://github.com.helper '!'"$(which gh) auth git-credential"
+	gh auth status
 
-# Configure
-echo
-echo "Disabling interactive prompts for GH CLI"
-gh config set prompt disabled
+	# Configure
+	echo
+	echo "Disabling interactive prompts for GH CLI"
+	gh config set prompt disabled
+else
+	# Login
+	echo
+	echo "Authenticating GH CLI with hostname"
+	gh auth login --hostname "$GITHUB_HOSTNAME"  --with-token "$GITHUB_TOKEN"
+	gh auth status
+fi
