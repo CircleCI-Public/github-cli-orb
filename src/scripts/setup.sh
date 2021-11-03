@@ -9,7 +9,7 @@ echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >> "$BASH_ENV"
 # Get hostname
 export GITHUB_HOSTNAME=${!PARAM_GH_HOSTNAME}
 [ -z "$GITHUB_HOSTNAME" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
-echo "export GITHUB_TOKEN=\"${GITHUB_HOSTNAME}\"" >> "$BASH_ENV"
+echo "export GITHUB_HOSTNAME=\"${GITHUB_HOSTNAME}\"" >> "$BASH_ENV"
 # Define current platform
 if [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "x86_64" ]]; then
 	export SYS_ENV_PLATFORM=macos
