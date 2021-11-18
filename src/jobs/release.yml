@@ -24,7 +24,7 @@ parameters:
     default: false
     description: Mark the release as a prerelease.
   files:
-    description: "To include a subset of your repository's files in the release, enter the filt glob here. (e.g. ./dist/*.tgz) "
+    description: "To include a subset of your repository's files in the release, enter the file glob here. (e.g. ./dist/*.tgz) "
     default: ""
     type: string
   title:

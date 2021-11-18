@@ -1,5 +1,5 @@
 description: >
-  Simply install the Github CLI for manual usage.
+  Simply install the GitHub CLI for manual usage.
   The `setup` command is used to install and authenticate the GitHub CLI.
   Once the setup is complete, you can utilize the CLI manually, or use any of the other provided orb commands, such as `clone`.
 usage:
