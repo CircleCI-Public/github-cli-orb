@@ -20,4 +20,4 @@ steps:
       environment:
           PARAM_GH_TOKEN: <<parameters.token>>
       name: Configure GH CLI v<<parameters.version>>
-      command: <<include(scripts/setup.sh)>>
+      command: <<include(scripts/configure.sh)>>
