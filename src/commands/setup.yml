@@ -14,6 +14,10 @@ steps:
   - run:
       environment:
           PARAM_GH_CLI_VERSION: <<parameters.version>>
-          PARAM_GH_TOKEN: <<parameters.token>>
       name: Install GH CLI v<<parameters.version>>
+      command: <<include(scripts/install.sh)>>
+  - run:
+      environment:
+          PARAM_GH_TOKEN: <<parameters.token>>
+      name: Configure GH CLI v<<parameters.version>>
       command: <<include(scripts/setup.sh)>>
