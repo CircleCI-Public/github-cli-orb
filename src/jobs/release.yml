@@ -9,7 +9,8 @@ resource_class: small
 
 parameters:
   tag:
-    type: string
+    type: env_var_name
+    default: RELEASE_TAG
     description: "Select a tag to create a release from. If a matching git tag does not yet exist, one will automatically get created from the latest state of the default branch."
   notes-file:
     description: "Path to file containing release notes (e.g.: ./changelog.md). "
