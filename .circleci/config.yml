@@ -43,7 +43,7 @@ jobs:
         type: executor
     executor: <<parameters.executor>>
     steps:
-      - github-cli/install:
+      - github-cli/install
       - run:
           name: verify Install
           command: command -v gh
