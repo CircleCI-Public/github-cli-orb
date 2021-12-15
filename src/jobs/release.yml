@@ -33,7 +33,7 @@ parameters:
     default: ""
   version:
     type: string
-    default: "1.9.2"
+    default: "2.3.0"
     description: Specify the full semver versioned tag to use for the GitHub CLI installation.
   hostname:
       type: string
