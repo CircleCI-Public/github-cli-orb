@@ -43,11 +43,16 @@ jobs:
         type: executor
     executor: <<parameters.executor>>
     steps:
-      - github-cli/setup:
-          token: GHI_TOKEN
+      - github-cli/install:
+          version: 2.2.0
       - run:
           name: verify Install
           command: command -v gh
+      - github-cli/setup:
+          token: GHI_TOKEN
+      - run:
+          name: verify Setup
+          command: gh auth status
       - github-cli/clone
       - run: ls
       # Test with a custom repo URL

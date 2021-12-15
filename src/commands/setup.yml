@@ -11,9 +11,10 @@ parameters:
           Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
           It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
 steps:
+  - install:
+      version: <<parameters.version>>
   - run:
       environment:
-          PARAM_GH_CLI_VERSION: <<parameters.version>>
           PARAM_GH_TOKEN: <<parameters.token>>
-      name: Install GH CLI v<<parameters.version>>
-      command: <<include(scripts/setup.sh)>>
+      name: Configure GH CLI v<<parameters.version>>
+      command: <<include(scripts/configure.sh)>>

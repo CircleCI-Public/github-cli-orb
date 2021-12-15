@@ -2,10 +2,6 @@
 # set smart sudo
 if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
 
-# Get auth token
-export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
-[ -z "$GITHUB_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
-echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >> "$BASH_ENV"
 # Define current platform
 if [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "x86_64" ]]; then
 	export SYS_ENV_PLATFORM=macos
@@ -51,15 +47,3 @@ if ! command -v gh >/dev/null 2>&1; then
 else
 	echo "GH CLI is already installed."
 fi
-
-# Authenticate
-echo
-echo "Authenticating GH CLI"
-git config --global credential.https://github.com.helper ''
-git config --global --add credential.https://github.com.helper '!'"$(which gh) auth git-credential"
-gh auth status
-
-# Configure
-echo
-echo "Disabling interactive prompts for GH CLI"
-gh config set prompt disabled

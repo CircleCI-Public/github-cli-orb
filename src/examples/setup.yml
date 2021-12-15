@@ -1,0 +1,23 @@
+description: >
+  Simply install the GitHub CLI for manual usage.
+  The `setup` command is used to install and authenticate the GitHub CLI.
+  Once the setup is complete, you can utilize the CLI manually, or use any of the other provided orb commands, such as `clone`.
+usage:
+  version: 2.1
+  orbs:
+    gh: circleci/github-cli@1.0
+  jobs:
+    create-a-pr:
+      docker:
+        - image: cimg/base:stable
+      steps:
+        - gh/setup
+        - run:
+            name: Create Pull Request
+            command: |
+              gh pr create --title "Bugfix from $CIRCLE_BRANCH"
+        - gh/clone
+  workflows:
+    use-my-orb:
+      jobs:
+        - create-a-pr

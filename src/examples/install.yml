@@ -1,23 +1,31 @@
 description: >
   Simply install the GitHub CLI for manual usage.
-  The `setup` command is used to install and authenticate the GitHub CLI.
-  Once the setup is complete, you can utilize the CLI manually, or use any of the other provided orb commands, such as `clone`.
+  The `install` command is used to install the GitHub CLI without authenticating or configuring it.
+  Once the installation is complete, you can utilize the CLI manually, or use any of the other provided orb commands, such as `clone`.
 usage:
   version: 2.1
   orbs:
     gh: circleci/github-cli@1.0
   jobs:
-    create-a-pr:
+    create-a-deployment:
       docker:
         - image: cimg/base:stable
       steps:
-        - gh/setup
+        - gh/install
         - run:
-            name: Create Pull Request
+            name: Create Deployment
             command: |
-              gh pr create --title "Bugfix from $CIRCLE_BRANCH"
-        - gh/clone
+              gh api /repos/:owner/:repo/deployments --preview ant-man --input - \
+              --jq '"export GH_DEPLOYMENT_STATUS_URL=\(.statuses_url)"' >> $BASH_ENV \<<JSON || true
+              {
+              "ref": "${CIRCLE_TAG:-$CIRCLE_SHA1}",
+              "environment": "${AWS_ENVIRONMENT,,}",
+              "auto_merge": false,
+              "required_contexts": []
+              }
+              JSON
+
   workflows:
     use-my-orb:
       jobs:
-        - create-a-pr
+        - create-a-deployment
