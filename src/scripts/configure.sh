@@ -9,7 +9,7 @@ echo
 echo "Authenticating GH CLI"
 git config --global credential.https://github.com.helper ''
 git config --global --add credential.https://github.com.helper '!'"$(which gh) auth git-credential"
-gh auth setup-git --host "$PARAM_GH_HOSTNAME"
+gh auth setup-git --hostname "$PARAM_GH_HOSTNAME"
 gh auth status
 
 # Configure
