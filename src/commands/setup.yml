@@ -2,7 +2,7 @@ description: Install and authenticate with the gh cli. This command should be ru
 parameters:
     version:
         type: string
-        default: "1.9.2"
+        default: "2.3.0"
         description: Specify the full semver versioned tag to use.
     hostname:
         type: string
