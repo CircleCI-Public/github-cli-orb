@@ -43,8 +43,7 @@ jobs:
         type: executor
     executor: <<parameters.executor>>
     steps:
-      - github-cli/install:
-          version: 2.2.0
+      - github-cli/install
       - run:
           name: verify Install
           command: command -v gh
@@ -54,13 +53,18 @@ jobs:
           name: verify Setup
           command: gh auth status
       - github-cli/clone
-      - run: ls
+      - run:
+          name: Verify Clone
+          command: |
+            [ -f README.md ]
       # Test with a custom repo URL
       - run: mkdir test2
       - github-cli/clone:
           repo: https://github.com/CircleCI-Public/Orb-Project-Template.git
           dir: ./test2
-      - run: cd ./test2 && ls
+      - run:
+          command: |
+            [ -f ./test2/README.md ]
 
 workflows:
   # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.
