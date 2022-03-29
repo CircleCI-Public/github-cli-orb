@@ -1,0 +1,76 @@
+version: 2.1
+orbs:
+  github-cli: circleci/github-cli@dev:<<pipeline.git.revision>>
+  orb-tools: circleci/orb-tools@11.1
+filters: &filters
+  tags:
+    only: /.*/
+jobs:
+  # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
+  integration-test-1:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      - github-cli/install
+      - run:
+          name: verify Install
+          command: command -v gh
+      - github-cli/setup:
+          token: GHI_TOKEN
+      - run:
+          name: verify Setup
+          command: gh auth status
+      - github-cli/clone
+      - run:
+          name: Verify Clone
+          command: |
+            [ -f README.md ]
+      # Test with a custom repo URL
+      - run: mkdir test2
+      - github-cli/clone:
+          repo: https://github.com/CircleCI-Public/Orb-Project-Template.git
+          dir: ./test2
+      - run:
+          command: |-
+            [ -f ./test2/README.md ]
+workflows:
+  test-deploy:
+    jobs:
+      # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
+      - integration-test-1:
+          context: orb-publisher
+          filters: *filters
+          matrix:
+            parameters:
+              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos", "arm"]
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/publish:
+          orb-name: circleci/github-cli
+          vcs-type: << pipeline.project.type >>
+          pub-type: production
+          requires:
+            - orb-tools/pack
+            - integration-test-1
+          context: orb-publisher
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+executors:
+  docker-x86-debian:
+    docker:
+      - image: cimg/base:current
+  macos:
+    macos:
+      xcode: 12.4.0
+  arm:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+  linuxvm-x86-debian:
+    machine:
+      image: ubuntu-2004:202101-01
