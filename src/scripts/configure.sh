@@ -8,7 +8,10 @@ echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >> "$BASH_ENV"
 echo
 echo "Authenticating GH CLI"
 gh auth setup-git --hostname "$PARAM_GH_HOSTNAME"
-gh auth status
+
+echo
+echo "Viewing authentication GH authentication status"
+gh auth status || echo "Viewing auth status is unavailable without proper scope."
 
 # Configure
 echo
