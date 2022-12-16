@@ -1,0 +1,54 @@
+description: >
+  Upload assets to an existing GitHub Release.
+  Specify a tag matching the release with the `tag` parameter (required).
+  See more at https://cli.github.com/manual/gh_release_upload.
+
+docker:
+  - image: cimg/base:stable
+
+resource_class: small
+
+parameters:
+  additional_args:
+    type: string
+    default: ""
+    description: "Enter any additional arguments to pass to the `gh release upload` command (e.g. --clobber)"
+  files:
+    description: "To include a subset of your repository's files in the release, enter the file glob here. (e.g. ./dist/*.tgz) "
+    type: string
+  hostname:
+    type: string
+    default: "github.com"
+    description: >
+      Specify the hostname of the GitHub instance to authenticate with.
+      Set this to connect to your GitHub Enterprise instance.
+  tag:
+    type: string
+    default: "$CIRCLE_TAG"
+    description: >
+      Specify the tag which the asset files will be uploaded to.
+      A GitHub Release matching the tag must already exist.
+  token:
+    type: env_var_name
+    default: "GITHUB_TOKEN"
+    description: >
+      Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
+      It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
+  version:
+    type: string
+    default: "2.20.2"
+    description: Specify the full semver versioned tag to use for the GitHub CLI installation.
+
+steps:
+  - install:
+      version: <<parameters.version>>
+  - clone
+  - run:
+      name: "Uploading assets to GitHub Release"
+      environment:
+        ORB_EVAL_ADDITIONAL_ARGS: <<parameters.additional_args>>
+        ORB_EVAL_FILES: <<parameters.files>>
+        ORB_EVAL_HOSTNAME: <<parameters.hostname>>
+        ORB_EVAL_TAG: <<parameters.tag>>
+        ORB_ENV_TOKEN: <<parameters.token>>
+      command: <<include(scripts/upload.sh)>>
