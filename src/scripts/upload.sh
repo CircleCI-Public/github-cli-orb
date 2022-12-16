@@ -10,9 +10,11 @@ token="${!ORB_ENV_TOKEN}"
 printf '%s\n' "export GITHUB_TOKEN=$token" >> "$BASH_ENV"
 [ -n "$hostname" ] && printf '%s\n' "export GITHUB_HOSTNAME=$hostname" >> "$BASH_ENV"
 
+set -x
 # shellcheck disable=SC2086
 gh release create \
   "$tag" \
   $files \
   --repo "$(git config --get remote.origin.url)" \
   $additional_args
+set +x
