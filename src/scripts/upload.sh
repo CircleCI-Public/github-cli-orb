@@ -12,7 +12,7 @@ printf '%s\n' "export GITHUB_TOKEN=$token" >> "$BASH_ENV"
 
 set -x
 # shellcheck disable=SC2086
-gh release create \
+gh release upload \
   "$tag" \
   $files \
   --repo "$(git config --get remote.origin.url)" \
