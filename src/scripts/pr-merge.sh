@@ -14,7 +14,6 @@ printf '%s\n' "export GITHUB_TOKEN=$token" >>"$BASH_ENV"
 set -x
 # shellcheck disable=SC2086
 gh pr merge \
-  $branch
---repo "$(git config --get remote.origin.url)" \
+  $branch --repo "$(git config --get remote.origin.url)" \
   $additional_args
 set +x
