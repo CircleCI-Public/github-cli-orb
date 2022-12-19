@@ -1,0 +1,47 @@
+description: >
+  Merge pull request to target branch.
+  See more at https://cli.github.com/manual/gh_pr_merge.
+
+docker:
+  - image: cimg/base:stable
+
+resource_class: small
+
+parameters:
+  branch:
+    type: string
+    default: ""
+    description: "Enter PR number, branch or URL to merge. Without an argument, the pull request that belongs to the current branch is selected"
+  additional_args:
+    type: string
+    default: ""
+    description: "Enter any additional arguments to pass to the `gh pr merge` command (e.g. --squash)"
+  hostname:
+    type: string
+    default: "github.com"
+    description: >
+      Specify the hostname of the GitHub instance to authenticate with.
+      Set this to connect to your GitHub Enterprise instance.
+  token:
+    type: env_var_name
+    default: "GITHUB_TOKEN"
+    description: >
+      Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
+      It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
+  version:
+    type: string
+    default: "2.20.2"
+    description: Specify the full semver versioned tag to use for the GitHub CLI installation.
+
+steps:
+  - install:
+      version: <<parameters.version>>
+  - clone
+  - run:
+      name: "Merging PR to target branch"
+      environment:
+        ORB_EVAL_ADDITIONAL_ARGS: <<parameters.additional_args>>
+        ORB_EVAL_BRANCH: <<parameters.branch>>
+        ORB_EVAL_HOSTNAME: <<parameters.hostname>>
+        ORB_ENV_TOKEN: <<parameters.token>>
+      command: <<include(scripts/pr-merge.sh)>>

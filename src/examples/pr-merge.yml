@@ -1,0 +1,24 @@
+description: >
+  Use the GitHub CLI merge pull request automatically. Usually it can be a pull request from a bot like Dependabot.
+  In this example, on every Dependabot pull request, we run tests and merge the PR if tests pass 
+  Add a Context containing your GITHUB_TOKEN and GITHUB_HOSTNAME (optional) or set a project-level environment variable.
+usage:
+  version: 2.1
+  orbs:
+    gh: circleci/github-cli@2.2.0
+  workflows:
+    build_and_test:
+      jobs:
+        - build:
+        - test:
+            requires:
+              - build
+        - gh/pr-merge:
+            context:
+              - GITHUB_CREDS
+            additional-args: --rebase  --delete-branch
+            filters:
+              branches:
+                only: /^dependabot.*/
+            requires:
+              - test
