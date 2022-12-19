@@ -1,25 +1,25 @@
 description: Install and authenticate with the gh cli. This command should be run before invoking the gh cli.
 parameters:
-    version:
-        type: string
-        default: "2.3.0"
-        description: Specify the full semver versioned tag to use.
-    hostname:
-        type: string
-        default: "github.com"
-        description: Specify the hostname of the GitHub instance to authenticate with.
-    token:
-        type: env_var_name
-        default: "GITHUB_TOKEN"
-        description: |
-          Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
-          It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
+  version:
+    type: string
+    default: "2.3.0"
+    description: Specify the full semver versioned tag to use.
+  hostname:
+    type: string
+    default: "github.com"
+    description: Specify the hostname of the GitHub instance to authenticate with.
+  token:
+    type: env_var_name
+    default: "GITHUB_TOKEN"
+    description: |
+      Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
+      It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
 steps:
   - install:
       version: <<parameters.version>>
   - run:
       environment:
-          PARAM_GH_TOKEN: <<parameters.token>>
-          PARAM_GH_HOSTNAME: <<parameters.hostname>>
+        PARAM_GH_TOKEN: <<parameters.token>>
+        PARAM_GH_HOSTNAME: <<parameters.hostname>>
       name: Configure GH CLI v<<parameters.version>>
       command: <<include(scripts/configure.sh)>>

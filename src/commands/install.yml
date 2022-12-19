@@ -1,12 +1,12 @@
 description: Install the gh cli without authenticating or configuring. This command should be run before invoking the gh cli.
 parameters:
-    version:
-        type: string
-        default: "2.3.0"
-        description: Specify the full semver versioned tag to use.
+  version:
+    type: string
+    default: "2.3.0"
+    description: Specify the full semver versioned tag to use.
 steps:
   - run:
       environment:
-          PARAM_GH_CLI_VERSION: <<parameters.version>>
+        PARAM_GH_CLI_VERSION: <<parameters.version>>
       name: Install GH CLI v<<parameters.version>>
       command: <<include(scripts/install.sh)>>
