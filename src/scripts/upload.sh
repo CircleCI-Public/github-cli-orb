@@ -6,9 +6,12 @@ hostname="$(eval printf '%s' "$ORB_EVAL_HOSTNAME")"
 tag="$(eval printf '%s' "$ORB_EVAL_TAG")"
 token="${!ORB_ENV_TOKEN}"
 
-[ -z "$token" ] && { >&2 printf '%s\n' "A GitHub token must be supplied" "Check the \"token\" parameter."; exit 1; }
-printf '%s\n' "export GITHUB_TOKEN=$token" >> "$BASH_ENV"
-[ -n "$hostname" ] && printf '%s\n' "export GITHUB_HOSTNAME=$hostname" >> "$BASH_ENV"
+[ -z "$token" ] && {
+  printf >&2 '%s\n' "A GitHub token must be supplied" "Check the \"token\" parameter."
+  exit 1
+}
+printf '%s\n' "export GITHUB_TOKEN=$token" >>"$BASH_ENV"
+[ -n "$hostname" ] && printf '%s\n' "export GITHUB_HOSTNAME=$hostname" >>"$BASH_ENV"
 
 set -x
 # shellcheck disable=SC2086
