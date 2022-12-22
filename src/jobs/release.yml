@@ -35,6 +35,12 @@ parameters:
     type: string
     default: "2.3.0"
     description: Specify the full semver versioned tag to use for the GitHub CLI installation.
+  additional_args:
+    type: string
+    default: ""
+    description: |
+      Specify additional arguments to pass to the GitHub CLI command.
+      See the GitHub CLI documentation for a list of available arguments: https://cli.github.com/manual/gh_release_create
   hostname:
     type: string
     default: "github.com"
@@ -60,4 +66,5 @@ steps:
         PARAM_GH_PRERELEASE: <<parameters.prerelease>>
         PARAM_GH_FILES: <<parameters.files>>
         PARAM_GH_TITLE: <<parameters.title>>
+        PARAM_GH_ARGS: <<parameters.additional_args>>
       command: <<include(scripts/release.sh)>>
