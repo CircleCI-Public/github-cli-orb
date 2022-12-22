@@ -25,6 +25,11 @@ fi
 if [ -n "$PARAM_GH_FILES" ]; then
 	set -- "$@" " $PARAM_GH_FILES"
 fi
+ 
 set -- "$@" --repo "$(git config --get remote.origin.url)"
 
-gh release create "$PARAM_GH_TAG" "$@"
+# shellcheck disable=SC2086
+gh release create \
+  "$PARAM_GH_TAG" \
+  $PARAM_GH_ARGS \
+  "$@"
