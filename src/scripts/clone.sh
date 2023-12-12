@@ -1,3 +1,4 @@
+#!/bin/bash
 # Ensure known hosts are entered. Required for Docker.
 mkdir -p ~/.ssh
 
