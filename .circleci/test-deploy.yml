@@ -1,10 +1,18 @@
 version: 2.1
 orbs:
-  github-cli: circleci/github-cli@dev:<<pipeline.git.revision>>
-  orb-tools: circleci/orb-tools@11.5
+  github-cli: {}
+  orb-tools: circleci/orb-tools@12.0
+
 filters: &filters
   tags:
     only: /.*/
+
+release-filters: &release-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
 jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
   integration-test-1:
@@ -46,20 +54,17 @@ workflows:
             parameters:
               executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos", "arm"]
       - orb-tools/pack:
-          filters: *filters
+          filters: *release-filters
       - orb-tools/publish:
-          orb-name: circleci/github-cli
-          vcs-type: << pipeline.project.type >>
-          pub-type: production
+          orb_name: circleci/github-cli
+          vcs_type: << pipeline.project.type >>
+          pub_type: production
+          github_token: GHI_TOKEN
           requires:
             - orb-tools/pack
             - integration-test-1
           context: orb-publisher
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+          filters: *release-filters
 executors:
   docker-x86-debian:
     docker:
