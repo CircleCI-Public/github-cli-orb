@@ -27,7 +27,7 @@ if ! command -v gh >/dev/null 2>&1; then
 		rm gh-cli.deb
 		;;
 	macos_arm)
-		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_darwin_arm64.tar.gz" -o "gh-cli.tar.gz"
+		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_macOS_arm64.tar.gz" -o "gh-cli.tar.gz"
 		$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
 		rm gh-cli.tar.gz
 		;;
