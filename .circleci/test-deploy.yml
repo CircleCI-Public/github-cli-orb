@@ -52,7 +52,7 @@ workflows:
           filters: *filters
           matrix:
             parameters:
-              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos-x86", "apple-silicon" "arm"]
+              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos-x86", "apple-silicon", "arm"]
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
