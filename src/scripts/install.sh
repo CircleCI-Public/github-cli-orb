@@ -17,27 +17,35 @@ else
 	exit 1
 fi
 
+download_gh_binary() {
+  local release="$1"
+  local output="$2"
+  set -x
+  curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_${release}" -o "$output"
+  set +x
+}
+
 # If not installed
 if ! command -v gh >/dev/null 2>&1; then
 	echo "Installing the GitHub CLI"
 	case $SYS_ENV_PLATFORM in
 	linux_x86)
-		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_linux_amd64.deb" -o "gh-cli.deb"
+    	download_gh_binary "linux_amd64.deb" "gh-cli.deb"
 		$SUDO apt install ./gh-cli.deb
 		rm gh-cli.deb
 		;;
 	macos_arm)
-		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_macOS_arm64.tar.gz" -o "gh-cli.tar.gz"
+    	download_gh_binary "macOS_arm64.tar.gz" "gh-cli.tar.gz"
 		$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
 		rm gh-cli.tar.gz
 		;;
 	macos)
-		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_macOS_amd64.tar.gz" -o "gh-cli.tar.gz"
+    	download_gh_binary "macOS_amd64.tar.gz" "gh-cli.tar.gz"
 		$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
 		rm gh-cli.tar.gz
 		;;
 	linux_arm)
-		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_linux_arm64.tar.gz" -o "gh-cli.tar.gz"
+    	download_gh_binary "linux_arm64.tar.gz" "gh-cli.tar.gz"
 		$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
 		rm gh-cli.tar.gz
 		;;
