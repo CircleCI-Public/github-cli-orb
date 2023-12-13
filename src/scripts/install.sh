@@ -5,6 +5,8 @@ if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
 # Define current platform
 if [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "x86_64" ]]; then
 	export SYS_ENV_PLATFORM=macos
+elif [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "arm64" ]]; then
+	export SYS_ENV_PLATFORM=macos_arm
 elif [[ "$(uname -s)" == "Linux" && "$(uname -m)" == "x86_64" ]]; then
 	export SYS_ENV_PLATFORM=linux_x86
 elif [[ "$(uname -s)" == "Linux" && "$(uname -m)" == "aarch64" ]]; then
@@ -23,6 +25,11 @@ if ! command -v gh >/dev/null 2>&1; then
 		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_linux_amd64.deb" -o "gh-cli.deb"
 		$SUDO apt install ./gh-cli.deb
 		rm gh-cli.deb
+		;;
+	darwin_arm64)
+		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_darwin_arm64.tar.gz" -o "gh-cli.tar.gz"
+		$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
+		rm gh-cli.tar.gz
 		;;
 	macos)
 		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_macOS_amd64.tar.gz" -o "gh-cli.tar.gz"
