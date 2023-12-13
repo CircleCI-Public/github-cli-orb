@@ -79,5 +79,5 @@ if ! command -v gh >/dev/null 2>&1; then
   exit 1
 else
   echo "GH CLI installed successfully"
-  command -v gh
+  set -x; command -v gh; set +x
 fi
