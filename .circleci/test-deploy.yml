@@ -52,7 +52,7 @@ workflows:
           filters: *filters
           matrix:
             parameters:
-              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos", "arm"]
+              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos-x86", "apple-silicon" "arm"]
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -69,9 +69,14 @@ executors:
   docker-x86-debian:
     docker:
       - image: cimg/base:current
-  macos:
+  macos-x86:
     macos:
       xcode: 14.0.0
+    resource_class: macos.x86.medium.gen2
+  apple-silicon:
+    macos:
+      xcode: 15.0.0
+    resource_class: macos.m1.medium.gen1
   arm:
     machine:
       image: ubuntu-2004:202101-01
