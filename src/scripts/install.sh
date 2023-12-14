@@ -12,7 +12,7 @@ version_le() { test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" == "$1"; 
 detect_platform() {
   case "$(uname -s)-$(uname -m)" in
   "Darwin-x86_64") echo "macos_amd64" ;;
-  "Darwin-arm64") echo "macos_arm" ;;
+  "Darwin-arm64") echo "macos_arm64" ;;
   "Linux-x86_64") echo "linux_x86" ;;
   "Linux-aarch64") echo "linux_arm" ;;
   *) echo "unsupported" ;;
@@ -35,7 +35,8 @@ fi
 # If the GH CLI version is less than or equal to 2.24.0 on macOS ARM then exit
 # Apple Silicon support was added in 2.25.0
 if [[ "$platform" == "macos_arm" ]] && version_le "$PARAM_GH_CLI_VERSION" "2.24.0"; then
-  echo "macOS ARM is not supported for GH CLI versions less than or equal to 2.24.0"
+  echo "macOS ARM is not supported for GH CLI versions less than or equal to 2.24.0."
+  echo "You are trying to install version $PARAM_GH_CLI_VERSION."
   exit 1
 fi
 
