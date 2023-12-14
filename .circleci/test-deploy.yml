@@ -19,9 +19,12 @@ jobs:
     parameters:
       executor:
         type: executor
+      version:
+        type: string
     executor: <<parameters.executor>>
     steps:
-      - github-cli/install
+      - github-cli/install:
+          version: << parameters.version >>
       - run:
           name: verify Install
           command: command -v gh
@@ -46,13 +49,13 @@ jobs:
 workflows:
   test-deploy:
     jobs:
-      # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-1:
           context: orb-publisher
           filters: *filters
           matrix:
             parameters:
-              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos", "arm"]
+              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos-x86", "apple-silicon", "arm"]
+              version: [2.27.0, 2.40.0] # 2.27.0 is the last version that uses ".tar.gz" instead of ".zip" for macOS
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -69,9 +72,14 @@ executors:
   docker-x86-debian:
     docker:
       - image: cimg/base:current
-  macos:
+  macos-x86:
     macos:
       xcode: 14.0.0
+    resource_class: macos.x86.medium.gen2
+  apple-silicon:
+    macos:
+      xcode: 15.0.0
+    resource_class: macos.m1.medium.gen1
   arm:
     machine:
       image: ubuntu-2004:202101-01

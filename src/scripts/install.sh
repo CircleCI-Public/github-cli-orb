@@ -1,49 +1,121 @@
-#!/bin/bash
-# set smart sudo
-if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
+#!/usr/bin/env bash
 
-# Define current platform
-if [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "x86_64" ]]; then
-	export SYS_ENV_PLATFORM=macos
-elif [[ "$(uname -s)" == "Linux" && "$(uname -m)" == "x86_64" ]]; then
-	export SYS_ENV_PLATFORM=linux_x86
-elif [[ "$(uname -s)" == "Linux" && "$(uname -m)" == "aarch64" ]]; then
-	export SYS_ENV_PLATFORM=linux_arm
-else
-	echo "This platform appears to be unsupported."
-	uname -a
-	exit 1
+set_sudo() {
+    if [[ $EUID == 0 ]]; then 
+        echo ""
+    else 
+        echo "sudo"
+    fi
+}
+
+# Function to check if a version is greater than or equal to a given version
+version_ge() {
+    test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" == "$1"
+}
+
+# Function to check if a version is less than or equal to a given version
+version_le() {
+    test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" == "$1"
+}
+
+detect_platform() {
+    case "$(uname -s)-$(uname -m)" in
+    "Darwin-x86_64") echo "macos_amd64" ;;
+    "Darwin-arm64") echo "macos_arm64" ;;
+    "Linux-x86_64") echo "linux_amd64" ;;
+    "Linux-aarch64") echo "linux_arm64" ;;
+    *) echo "unsupported" ;;
+    esac
+}
+
+download_gh_cli() {
+    local platform=$1
+    local file_extension=$2
+    local download_url="https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_${platform}.${file_extension}"
+    echo "Downloading the GitHub CLI from \"$download_url\"..."
+
+    if ! curl -sSL "$download_url" -o "gh-cli.$file_extension"; then
+        echo "Failed to download GH CLI from $download_url" >&2
+        return 1
+    fi
+}
+
+install_gh_cli() {
+    local platform=$1
+    local file_extension=$2
+    local file_path="gh-cli.$file_extension"
+
+    if [ ! -f "$file_path" ]; then
+        echo "Downloaded file $file_path does not exist." >&2
+        return 1
+    fi
+
+    echo "Installing the GitHub CLI..."
+    if [ "$platform" == "linux_amd64" ]; then 
+        set -x; $sudo apt install ./"$file_path"; set +x
+    else
+        set -x; $sudo tar -xf ./"$file_path" -C /usr/local/ --strip-components=1; set +x
+    fi
+}
+
+sudo=$(set_sudo)
+
+# Check for required commands
+for cmd in curl tar; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "Error: $cmd is required. Please install it and try again." >&2
+        exit 1
+    fi
+done
+
+# Verify if the CLI is already installed. Exit if it is.
+if command -v gh >/dev/null 2>&1; then
+    echo "GH CLI is already installed."
+    exit 0
 fi
 
-# If not installed
+# If the GH CLI version is less than or equal to 2.24.0 on macOS ARM then exit
+# Apple Silicon support was added in 2.25.0 (https://github.com/cli/cli/releases/tag/v2.25.0)
+if [[ "$platform" == "macos_arm" ]] && version_le "$PARAM_GH_CLI_VERSION" "2.24.0"; then
+  echo "You are trying to install version $PARAM_GH_CLI_VERSION. macOS ARM support was added in version 2.25.0, please specify a newer version."
+  exit 1
+fi
+
+platform=$(detect_platform)
+if [ "$platform" == "unsupported" ]; then
+    echo "$(uname -a)-$(uname -m) is not supported. If you believe it should be, please consider opening an issue."
+    exit 1
+fi
+
+# Determine file extension
+# macOS releases after 2.28.0 adopted `.zip` (https://github.com/cli/cli/releases/tag/v2.28.0)
+file_extension="tar.gz"
+if [[ "$platform" == macos_* ]] && version_ge "$PARAM_GH_CLI_VERSION" "2.28.0"; then
+    file_extension="zip"
+elif [[ "$platform" == "linux_amd64" ]]; then
+    file_extension="deb"
+fi
+
+# Download and install GH CLI
+if ! download_gh_cli "$platform" "$file_extension"; then
+    echo "Failed to download the GH CLI."
+    exit 1
+fi
+
+if ! install_gh_cli "$platform" "$file_extension"; then
+    echo "Failed to install the GH CLI."
+    exit 1
+fi
+
+# Clean up
+if ! rm "gh-cli.$file_extension"; then
+    echo "Failed to remove the downloaded file."
+fi
+
+# Verify installation
 if ! command -v gh >/dev/null 2>&1; then
-	echo "Installing the GitHub CLI"
-	case $SYS_ENV_PLATFORM in
-	linux_x86)
-		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_linux_amd64.deb" -o "gh-cli.deb"
-		$SUDO apt install ./gh-cli.deb
-		rm gh-cli.deb
-		;;
-	macos)
-		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_macOS_amd64.tar.gz" -o "gh-cli.tar.gz"
-		$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
-		rm gh-cli.tar.gz
-		;;
-	linux_arm)
-		curl -sSL "https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_linux_arm64.tar.gz" -o "gh-cli.tar.gz"
-		$SUDO tar -xf ./gh-cli.tar.gz -C /usr/local/ --strip-components=1
-		rm gh-cli.tar.gz
-		;;
-	*)
-		echo "This orb does not currently support your platform. If you believe it should, please consider opening an issue on the GitHub repository:"
-		echo "https://github.com/CircleCI-Public/github-cli-orb"
-		exit 1
-		;;
-	esac
-	# Validate install.
-	echo
-	echo "GH CLI installed"
-	command -v gh
+    echo "Something went wrong installing the GH CLI. Please try again or open an issue."
+    exit 1
 else
-	echo "GH CLI is already installed."
+    gh --version
 fi
