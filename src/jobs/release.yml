@@ -54,6 +54,10 @@ parameters:
 steps:
   - install:
       version: <<parameters.version>>
+  - setup:
+      version: <<parameters.version>>
+      token: <<parameters.token>>
+      hostname: <<parameters.hostname>>
   - clone
   - run:
       name: "Creating a <<#parameters.draft>><<parameters.draft>> <</parameters.draft>>GitHub Release"
