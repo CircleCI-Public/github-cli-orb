@@ -52,7 +52,7 @@ install_gh_cli() {
 
     echo "Installing the GitHub CLI..."
     if [ "$platform" == "linux_amd64" ]; then 
-        set -x; $sudo apt install ./"$file_path"; set +x
+        set -x; $sudo apt install --yes ./"$file_path"; set +x
     else
         set -x; $sudo tar -xf ./"$file_path" -C /usr/local/ --strip-components=1; set +x
     fi
