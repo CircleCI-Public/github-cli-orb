@@ -54,7 +54,7 @@ workflows:
           filters: *filters
           matrix:
             parameters:
-              executor: ["docker-x86-debian", "linuxvm-x86-debian", "macos-x86", "apple-silicon", "arm"]
+              executor: ["docker-x86-debian", "apple-silicon-14", "apple-silicon-15", "linuxvm-arm-ubuntu-2004", "linuxvm-x86-ubuntu-2004", "linuxvm-arm-ubuntu-2204", "linuxvm-x86-ubuntu-2204", "linuxvm-arm-ubuntu-2404", "linuxvm-x86-ubuntu-2404"]
               version: [2.27.0, 2.40.0] # 2.27.0 is the last version that uses ".tar.gz" instead of ".zip" for macOS
       - orb-tools/pack:
           filters: *release-filters
@@ -72,18 +72,32 @@ executors:
   docker-x86-debian:
     docker:
       - image: cimg/base:current
-  macos-x86:
+  apple-silicon-14:
     macos:
-      xcode: 14.0.0
-    resource_class: macos.x86.medium.gen2
-  apple-silicon:
-    macos:
-      xcode: 15.0.0
+      xcode: 14.3.1
     resource_class: macos.m1.medium.gen1
-  arm:
+  apple-silicon-15:
+    macos:
+      xcode: 15.4.0
+    resource_class: macos.m1.medium.gen1
+  linuxvm-arm-ubuntu-2004:
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2004:2024.05.1
     resource_class: arm.medium
-  linuxvm-x86-debian:
+  linuxvm-x86-ubuntu-2004:
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2004:2024.05.1
+  linuxvm-arm-ubuntu-2204:
+    machine:
+      image: ubuntu-2204:2024.05.1
+    resource_class: arm.medium
+  linuxvm-x86-ubuntu-2204:
+    machine:
+      image: ubuntu-2204:2024.05.1
+  linuxvm-arm-ubuntu-2404:
+    machine:
+      image: ubuntu-2404:2024.05.1
+    resource_class: arm.medium
+  linuxvm-x86-ubuntu-2404:
+    machine:
+      image: ubuntu-2404:2024.05.1
