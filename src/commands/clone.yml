@@ -15,6 +15,10 @@ parameters:
     type: string
     default: "."
     description: Select the path to clone into. By default the current path will be selected, which is dictated by the job's "working_directory".
+  when:
+    type: string
+    default: "on_success"
+    description: Specify when to run this command. Options are "on_success", "always" or "on_fail".
 steps:
   - run:
       name: Cloning repository
@@ -23,3 +27,4 @@ steps:
         PARAM_GH_DIR: <<parameters.dir>>
         PARAM_GH_HOSTNAME: <<parameters.hostname>>
       command: <<include(scripts/clone.sh)>>
+      when: <<parameters.when>>

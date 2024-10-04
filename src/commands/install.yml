@@ -4,9 +4,14 @@ parameters:
     type: string
     default: "2.40.1"
     description: Specify the full semver versioned tag to use.
+  when:
+    type: string
+    default: "on_success"
+    description: Specify when to run this command. Options are "on_success", "always" or "on_fail".
 steps:
   - run:
       environment:
         PARAM_GH_CLI_VERSION: <<parameters.version>>
       name: Install GH CLI v<<parameters.version>>
       command: <<include(scripts/install.sh)>>
+      when: <<parameters.when>>

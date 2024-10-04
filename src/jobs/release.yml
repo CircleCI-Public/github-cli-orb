@@ -52,8 +52,10 @@ parameters:
       Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
       It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
 steps:
-  - install:
+  - setup:
       version: <<parameters.version>>
+      token: <<parameters.token>>
+      hostname: <<parameters.hostname>>
   - clone
   - run:
       name: "Creating a <<#parameters.draft>><<parameters.draft>> <</parameters.draft>>GitHub Release"
