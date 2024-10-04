@@ -2,8 +2,8 @@ description: Install the gh cli without authenticating or configuring. This comm
 parameters:
   version:
     type: string
-    default: "2.40.1"
-    description: Specify the full semver versioned tag to use.
+    default: "latest"
+    description: Specify the full semver versioned tag to use. Default to latest.
   when:
     type: string
     default: "on_success"
