@@ -33,8 +33,8 @@ parameters:
     default: ""
   version:
     type: string
-    default: "2.3.0"
-    description: Specify the full semver versioned tag to use for the GitHub CLI installation.
+    default: "latest"
+    description: Specify the full semver versioned tag to use for the GitHub CLI installation. Default to latest.
   additional_args:
     type: string
     default: ""
