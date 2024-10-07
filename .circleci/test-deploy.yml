@@ -55,7 +55,7 @@ workflows:
           matrix:
             parameters:
               executor: ["docker-x86-debian", "apple-silicon-14", "apple-silicon-15", "linuxvm-arm-ubuntu-2004", "linuxvm-x86-ubuntu-2004", "linuxvm-arm-ubuntu-2204", "linuxvm-x86-ubuntu-2204", "linuxvm-arm-ubuntu-2404", "linuxvm-x86-ubuntu-2404"]
-              version: [2.27.0, 2.40.0] # 2.27.0 is the last version that uses ".tar.gz" instead of ".zip" for macOS
+              version: [2.27.0, 2.40.0, "latest"] # 2.27.0 is the last version that uses ".tar.gz" instead of ".zip" for macOS
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
