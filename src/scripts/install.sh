@@ -31,6 +31,10 @@ detect_platform() {
 download_gh_cli() {
     local platform=$1
     local file_extension=$2
+    if [ "$PARAM_GH_CLI_VERSION" = "latest" ]; then
+        LATEST_TAG=$(curl url -s https://api.github.com/repos/cli/cli/releases/latest | jq -r '.tag_name')
+        PARAM_GH_CLI_VERSION="${LATEST_TAG#v}"
+    fi
     local download_url="https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_${platform}.${file_extension}"
     echo "Downloading the GitHub CLI from \"$download_url\"..."
 
@@ -52,7 +56,7 @@ install_gh_cli() {
 
     echo "Installing the GitHub CLI..."
     if [ "$platform" == "linux_amd64" ]; then 
-        set -x; $sudo apt install ./"$file_path"; set +x
+        set -x; $sudo apt install --yes ./"$file_path"; set +x
     else
         set -x; $sudo tar -xf ./"$file_path" -C /usr/local/ --strip-components=1; set +x
     fi

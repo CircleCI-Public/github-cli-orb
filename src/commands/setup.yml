@@ -2,8 +2,8 @@ description: Install and authenticate with the gh cli. This command should be ru
 parameters:
   version:
     type: string
-    default: "2.55.0"
-    description: Specify the full semver versioned tag to use.
+    default: "latest"
+    description: Specify the full semver versioned tag to use. Default to latest.
   hostname:
     type: string
     default: "github.com"
