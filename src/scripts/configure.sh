@@ -1,7 +1,6 @@
 #!/bin/bash
 # Get auth token
 [ -z "${!PARAM_GH_TOKEN}" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
-echo "export GH_HOST=\"${PARAM_GH_HOSTNAME}\"" >> "$BASH_ENV"
 
 if [[ "${PARAM_GH_HOSTNAME}" == "github.com" ]]; then
     export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
@@ -9,6 +8,8 @@ if [[ "${PARAM_GH_HOSTNAME}" == "github.com" ]]; then
 else
     export GH_ENTERPRISE_TOKEN=${!PARAM_GH_TOKEN}
     echo "export GH_ENTERPRISE_TOKEN=\"${GH_ENTERPRISE_TOKEN}\"" >> "$BASH_ENV"
+    export GH_HOST=${PARAM_GH_HOSTNAME}
+    echo "export GH_HOST=\"${PARAM_GH_HOSTNAME}\"" >> "$BASH_ENV"
 fi
 
 # Setup git with GH CLI
