@@ -1,12 +1,20 @@
 #!/bin/bash
 # Get auth token
-export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
-[ -z "$GITHUB_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
-echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >>"$BASH_ENV"
+[ -z "${!PARAM_GH_TOKEN}" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
 
-# Authenticate
+if [[ "${PARAM_GH_HOSTNAME}" == "github.com" ]]; then
+    export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
+    echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >> "$BASH_ENV"
+else
+    export GH_ENTERPRISE_TOKEN=${!PARAM_GH_TOKEN}
+    echo "export GH_ENTERPRISE_TOKEN=\"${GH_ENTERPRISE_TOKEN}\"" >> "$BASH_ENV"
+    export GH_HOST=${PARAM_GH_HOSTNAME}
+    echo "export GH_HOST=\"${PARAM_GH_HOSTNAME}\"" >> "$BASH_ENV"
+fi
+
+# Setup git with GH CLI
 echo
-echo "Authenticating GH CLI"
+echo "Setting up git with GH CLI"
 gh auth setup-git --hostname "$PARAM_GH_HOSTNAME"
 
 echo
