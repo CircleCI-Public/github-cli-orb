@@ -6,7 +6,7 @@ ssh-keyscan -t rsa "$PARAM_GH_HOSTNAME" >> ~/.ssh/known_hosts
 
 PARAM_GITHUB_REPO_EXPANDED="$(eval echo "$PARAM_GH_REPO")"
 
-if [ -n "$PARAM_BRANCH"]; then
+if [ -n "$PARAM_BRANCH" ]; then
     PARAM_BRANCH="-- --branch=$PARAM_BRANCH"
 fi
 
