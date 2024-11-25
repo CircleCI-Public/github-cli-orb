@@ -53,7 +53,7 @@ jobs:
           dir: ./test3
       - run: |
           cd test3
-          [ "$(git rev-parse --abbrev-ref HEAD)" = "gmemstr-patch" ] 
+          [ "$(git rev-parse --abbrev-ref HEAD)" = "gmemstr-patch-1" ] 
           
 workflows:
   test-deploy:
