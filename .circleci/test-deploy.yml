@@ -48,7 +48,6 @@ jobs:
             [ -f ./test2/README.md ]
       - run: mkdir test3
       - github-cli/clone:
-          name: Clone to branch
           repo: https://github.com/CircleCI-Public/Orb-Project-Template.git
           branch: gmemstr-patch-1
           dir: ./test3
