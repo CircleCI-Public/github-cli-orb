@@ -15,6 +15,10 @@ parameters:
     type: string
     default: "."
     description: Select the path to clone into. By default the current path will be selected, which is dictated by the job's "working_directory".
+  branch:
+    type: string
+    default: ""
+    description: Branch to checkout. Value defaults to empty, which will clone the default branch.
   when:
     type: string
     default: "on_success"
@@ -26,5 +30,6 @@ steps:
         PARAM_GH_REPO: <<parameters.repo>>
         PARAM_GH_DIR: <<parameters.dir>>
         PARAM_GH_HOSTNAME: <<parameters.hostname>>
+        PARAM_BRANCH: <<parameters.branch>>
       command: <<include(scripts/clone.sh)>>
       when: <<parameters.when>>
