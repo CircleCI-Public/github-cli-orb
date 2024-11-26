@@ -11,8 +11,10 @@ if [ "$PARAM_GH_HOSTNAME" == 1 ]; then
 	export GITHUB_HOSTNAME=${!PARAM_GH_HOSTNAME}
 	echo "export GITHUB_HOSTNAME=\"${PARAM_GH_HOSTNAME}\"" >>"$BASH_ENV"
 fi
-set -- "$@" --repo "$(git config --get remote.origin.url)"
 
+if [ -n "$PARAM_GH_ARGS" ]; then
+	set -- "$@" "$PARAM_GH_ARGS"
+fi
 if [ "$PARAM_GH_DRAFT" == 1 ]; then
 	set -- "$@" --draft
 fi
@@ -28,10 +30,10 @@ fi
 if [ -n "$PARAM_GH_FILES" ]; then
 	set -- "$@" "$PARAM_GH_FILES"
 fi
-  
-# shellcheck disable=SC2086,SC2068
+ 
+set -- "$@" --repo "$(git config --get remote.origin.url)"
+
+# shellcheck disable=SC2086
 gh release create \
   "$PARAM_GH_TAG" \
-  "$PARAM_GH_ARGS" \
-  $@
-set +x
+  "$@"
