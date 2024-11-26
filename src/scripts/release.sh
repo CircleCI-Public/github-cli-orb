@@ -33,7 +33,7 @@ fi
  
 set -- "$@" --repo "$(git config --get remote.origin.url)"
 
-# shellcheck disable=SC2086
+# shellcheck disable=SC2086,SC2068
 gh release create \
   "$PARAM_GH_TAG" \
-  "$@"
+  $@
