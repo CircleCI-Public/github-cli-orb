@@ -1,5 +1,6 @@
 #!/bin/bash
 # Get auth token
+set -x
 cd "$PARAM_DIR" || exit
 export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
 [ -z "$GITHUB_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
@@ -28,9 +29,10 @@ if [ -n "$PARAM_GH_FILES" ]; then
 fi
  
 set -- "$@" --repo "$(git config --get remote.origin.url)"
-
+echo "$@"
 # shellcheck disable=SC2086
 gh release create \
   "$PARAM_GH_TAG" \
   "$PARAM_GH_ARGS" \
   "$@"
+set +x
