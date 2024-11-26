@@ -25,7 +25,7 @@ if [ -n "$PARAM_GH_TITLE" ]; then
 	set -- "$@" --title "$PARAM_GH_TITLE"
 fi
 if [ -n "$PARAM_GH_FILES" ]; then
-	set -- "$@" "$PARAM_GH_FILES"
+	set -- "$@" $PARAM_GH_FILES
 fi
  
 set -- "$@" --repo "$(git config --get remote.origin.url)"
