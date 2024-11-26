@@ -57,7 +57,7 @@ steps:
       steps:
       - clone:
           dir: <<parameters.dir>>
-          hostname: <<<parameters.hostname>>
+          hostname: <<parameters.hostname>>
   - run:
       name: "Uploading assets to GitHub Release"
       environment:

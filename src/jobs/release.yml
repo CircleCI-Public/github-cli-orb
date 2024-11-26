@@ -71,7 +71,7 @@ steps:
       steps:
       - clone:
           dir: <<parameters.dir>>
-          hostname: <<<parameters.hostname>>
+          hostname: <<parameters.hostname>>
   - run:
       name: "Creating a <<#parameters.draft>><<parameters.draft>> <</parameters.draft>>GitHub Release"
       environment:
