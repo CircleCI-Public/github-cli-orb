@@ -26,12 +26,12 @@ if [ -n "$PARAM_GH_TITLE" ]; then
 	set -- "$@" --title "$PARAM_GH_TITLE"
 fi
 if [ -n "$PARAM_GH_FILES" ]; then
-	set -- "$@" $PARAM_GH_FILES
+	set -- "$@" "$PARAM_GH_FILES"
 fi
   
 # shellcheck disable=SC2086
 gh release create \
   "$PARAM_GH_TAG" \
   "$PARAM_GH_ARGS" \
-  "$@"
+  $@
 set +x
