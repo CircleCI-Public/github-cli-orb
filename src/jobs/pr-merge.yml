@@ -1,7 +1,7 @@
 description: >
   Merge pull request to target branch.
   See more at https://cli.github.com/manual/gh_pr_merge.
-
+  This requires write:discussion permissions.
 docker:
   - image: cimg/base:stable
 

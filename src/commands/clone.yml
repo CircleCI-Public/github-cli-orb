@@ -1,7 +1,8 @@
 description: |
   A GitHub specific alternative to CircleCI's native "checkout" command.
   Use the GitHub CLI to clone the current repository, or specify an alternative repo via parameters.
-  https://cli.github.com/manual/gh_repo_clone
+  https://cli.github.com/manual/gh_repo_clone.
+  This requires read:org permissions on a private repo.
 parameters:
   repo:
     type: string

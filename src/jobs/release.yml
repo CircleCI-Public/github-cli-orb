@@ -1,7 +1,7 @@
 description: >
   Create a new GitHub Release for a repository.
   Specify a tag with the `tag` parameter (required). If a matching git tag does not yet exist, one will automatically get created from the latest state of the default branch.
-
+  This requires write:packages permissions.
 docker:
   - image: cimg/base:stable
 
@@ -51,12 +51,27 @@ parameters:
     description: |
       Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
       It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
+  dir:
+    type: string
+    default: "."
+    description: |
+      Select the path to clone into. By default the current path will be selected, which is dictated by the job's "working_directory".
+      The release will be done from this path.
+  clone:
+    type: boolean
+    default: true
+    description: Whether or not clone the repo. Defaults to true. Set to false if you already cloned the repo.
 steps:
   - setup:
       version: <<parameters.version>>
       token: <<parameters.token>>
       hostname: <<parameters.hostname>>
-  - clone
+  - when:
+    condition: <<parameters.clone>>
+    steps:
+    - clone:
+        dir: <<parameters.dir>>
+        hostname: <<<parameters.hostname>>
   - run:
       name: "Creating a <<#parameters.draft>><<parameters.draft>> <</parameters.draft>>GitHub Release"
       environment:
@@ -69,4 +84,5 @@ steps:
         PARAM_GH_FILES: <<parameters.files>>
         PARAM_GH_TITLE: <<parameters.title>>
         PARAM_GH_ARGS: <<parameters.additional_args>>
+        PARAM_DIR: <<parameters.dir>>
       command: <<include(scripts/release.sh)>>

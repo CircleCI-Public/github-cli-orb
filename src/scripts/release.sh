@@ -1,5 +1,6 @@
 #!/bin/bash
 # Get auth token
+cd "$PARAM_DIR" || exit
 export GITHUB_TOKEN=${!PARAM_GH_TOKEN}
 [ -z "$GITHUB_TOKEN" ] && echo "A GitHub token must be supplied. Check the \"token\" parameter." && exit 1
 echo "export GITHUB_TOKEN=\"${GITHUB_TOKEN}\"" >>"$BASH_ENV"
