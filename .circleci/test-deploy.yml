@@ -72,7 +72,7 @@ workflows:
           files: README.md
           context: orb-developer
           token: GHI_TOKEN
-          additional_args: --target fix/job-errors
+          additional_args: --generate-notes
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
