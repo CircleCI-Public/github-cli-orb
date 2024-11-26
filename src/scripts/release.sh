@@ -29,7 +29,7 @@ if [ -n "$PARAM_GH_FILES" ]; then
 	set -- "$@" "$PARAM_GH_FILES"
 fi
   
-# shellcheck disable=SC2086
+# shellcheck disable=SC2086,SC2068
 gh release create \
   "$PARAM_GH_TAG" \
   "$PARAM_GH_ARGS" \
