@@ -67,11 +67,11 @@ steps:
       token: <<parameters.token>>
       hostname: <<parameters.hostname>>
   - when:
-    condition: <<parameters.clone>>
-    steps:
-    - clone:
-        dir: <<parameters.dir>>
-        hostname: <<<parameters.hostname>>
+      condition: <<parameters.clone>>
+      steps:
+      - clone:
+          dir: <<parameters.dir>>
+          hostname: <<<parameters.hostname>>
   - run:
       name: "Creating a <<#parameters.draft>><<parameters.draft>> <</parameters.draft>>GitHub Release"
       environment:

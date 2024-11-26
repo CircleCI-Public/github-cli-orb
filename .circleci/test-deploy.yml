@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   github-cli: {}
-  orb-tools: circleci/orb-tools@12.0
+  orb-tools: circleci/orb-tools@12.2.0
 
 filters: &filters
   tags:
@@ -91,22 +91,22 @@ executors:
     resource_class: macos.m1.medium.gen1
   linuxvm-arm-ubuntu-2004:
     machine:
-      image: ubuntu-2004:2024.05.1
+      image: ubuntu-2004:2024.08.1
     resource_class: arm.medium
   linuxvm-x86-ubuntu-2004:
     machine:
-      image: ubuntu-2004:2024.05.1
+      image: ubuntu-2004:2024.08.1
   linuxvm-arm-ubuntu-2204:
     machine:
-      image: ubuntu-2204:2024.05.1
+      image: ubuntu-2204:2024.08.1
     resource_class: arm.medium
   linuxvm-x86-ubuntu-2204:
     machine:
-      image: ubuntu-2204:2024.05.1
+      image: ubuntu-2204:2024.08.1
   linuxvm-arm-ubuntu-2404:
     machine:
-      image: ubuntu-2404:2024.05.1
+      image: ubuntu-2404:2024.08.1
     resource_class: arm.medium
   linuxvm-x86-ubuntu-2404:
     machine:
-      image: ubuntu-2404:2024.05.1
+      image: ubuntu-2404:2024.08.1
