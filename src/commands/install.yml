@@ -1,4 +1,6 @@
-description: Install the gh cli without authenticating or configuring. This command should be run before invoking the gh cli.
+description: |
+  Install the gh cli without authenticating or configuring. This command should be run before invoking the gh cli.
+  This requires read:org permissions on private repos.
 parameters:
   version:
     type: string

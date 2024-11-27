@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+cd "$PARAM_DIR" || exit
 additional_args="$(eval printf '%s\\n' "$ORB_EVAL_ADDITIONAL_ARGS")"
 files="$(eval printf '%s\\n' "$ORB_EVAL_FILES")"
 hostname="$(eval printf '%s' "$ORB_EVAL_HOSTNAME")"

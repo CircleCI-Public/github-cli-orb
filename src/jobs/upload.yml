@@ -2,7 +2,7 @@ description: >
   Upload assets to an existing GitHub Release.
   Specify a tag matching the release with the `tag` parameter (required).
   See more at https://cli.github.com/manual/gh_release_upload.
-
+  This requires write:packages permissions.
 docker:
   - image: cimg/base:stable
 
@@ -38,11 +38,26 @@ parameters:
     type: string
     default: "2.20.2"
     description: Specify the full semver versioned tag to use for the GitHub CLI installation.
+  dir:
+    type: string
+    default: "."
+    description: |
+      Select the path to clone into. By default the current path will be selected, which is dictated by the job's "working_directory".
+      The upload will be done from this path.
+  clone:
+    type: boolean
+    default: true
+    description: Whether or not clone the repo. Defaults to true. Set to false if you already cloned the repo.
 
 steps:
   - install:
       version: <<parameters.version>>
-  - clone
+  - when:
+      condition: <<parameters.clone>>
+      steps:
+      - clone:
+          dir: <<parameters.dir>>
+          hostname: <<parameters.hostname>>
   - run:
       name: "Uploading assets to GitHub Release"
       environment:
@@ -51,4 +66,5 @@ steps:
         ORB_EVAL_HOSTNAME: <<parameters.hostname>>
         ORB_EVAL_TAG: <<parameters.tag>>
         ORB_ENV_TOKEN: <<parameters.token>>
+        PARAM_DIR: <<parameters.dir>>
       command: <<include(scripts/upload.sh)>>
