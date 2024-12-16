@@ -11,10 +11,11 @@ token="${!ORB_ENV_TOKEN}"
 }
 printf '%s\n' "export GITHUB_TOKEN=$token" >>"$BASH_ENV"
 [ -n "$hostname" ] && printf '%s\n' "export GITHUB_HOSTNAME=$hostname" >>"$BASH_ENV"
+[ -n "$repo" ] && repo="-R $repo"
 
 set -x
 # shellcheck disable=SC2086
 gh pr merge \
-  $branch --repo "$repo" \
+  $branch $repo \
   $additional_args
 set +x
