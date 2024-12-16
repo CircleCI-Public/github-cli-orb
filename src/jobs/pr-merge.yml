@@ -22,6 +22,10 @@ parameters:
     description: >
       Specify the hostname of the GitHub instance to authenticate with.
       Set this to connect to your GitHub Enterprise instance.
+  repo:
+    type: string
+    default: "$CIRCLE_REPOSITORY_URL"
+    description: Enter either the name of the repository or the full repository URL. Will default to the current project.
   token:
     type: env_var_name
     default: "GITHUB_TOKEN"
@@ -36,12 +40,12 @@ parameters:
 steps:
   - install:
       version: <<parameters.version>>
-  - clone
   - run:
       name: "Merging PR to target branch"
       environment:
         ORB_EVAL_ADDITIONAL_ARGS: <<parameters.additional_args>>
         ORB_EVAL_BRANCH: <<parameters.branch>>
         ORB_EVAL_HOSTNAME: <<parameters.hostname>>
+        ORB_EVAL_REPO: <<parameters.repo>>
         ORB_ENV_TOKEN: <<parameters.token>>
       command: <<include(scripts/pr-merge.sh)>>
