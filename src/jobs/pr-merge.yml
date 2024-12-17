@@ -10,7 +10,7 @@ resource_class: small
 parameters:
   branch:
     type: string
-    default: ""
+    default: "$CIRCLE_BRANCH"
     description: "Enter PR number, branch or URL to merge. Without an argument, the pull request that belongs to the current branch is selected"
   additional_args:
     type: string
