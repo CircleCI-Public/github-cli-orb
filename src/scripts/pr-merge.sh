@@ -1,6 +1,6 @@
 #!/bin/bash
 branch="$(eval printf '%s' "$ORB_EVAL_BRANCH")"
-additional_args="$(eval printf '%s\\n' "$ORB_EVAL_ADDITIONAL_ARGS")"
+readarray -t additional_args < <(eval "set -- $ORB_EVAL_ADDITIONAL_ARGS; printf '%s\n' \"\$@\"")
 hostname="$(eval printf '%s' "$ORB_EVAL_HOSTNAME")"
 repo="$(eval printf '%s' "$ORB_EVAL_REPO")"
 token="${!ORB_ENV_TOKEN}"
@@ -21,5 +21,5 @@ set -x
 # shellcheck disable=SC2086
 gh pr merge \
   $branch $repo \
-  $additional_args
+  "${additional_args[@]}"
 set +x
