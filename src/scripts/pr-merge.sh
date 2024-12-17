@@ -9,6 +9,10 @@ token="${!ORB_ENV_TOKEN}"
   printf >&2 '%s\n' "A GitHub token must be supplied" "Check the \"token\" parameter."
   exit 1
 }
+[ -z "$branch" ] && {
+  printf >&2 '%s\n' "A target branch must be supplied" "Check the \"branch\" parameter."
+  exit 1
+}
 printf '%s\n' "export GITHUB_TOKEN=$token" >>"$BASH_ENV"
 [ -n "$hostname" ] && printf '%s\n' "export GITHUB_HOSTNAME=$hostname" >>"$BASH_ENV"
 [ -n "$repo" ] && repo="-R $repo"
