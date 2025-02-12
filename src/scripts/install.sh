@@ -43,7 +43,7 @@ download_gh_cli() {
             echo "Couldn't get latest version, retrying..."
             sleep 3
         done
-        if [ $i = $max_retries ]; then
+        if (( i == max_retries )); then
             echo "Erro: Max retries exceeded"
             exit 1
         fi
