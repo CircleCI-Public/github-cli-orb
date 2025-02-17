@@ -32,7 +32,22 @@ download_gh_cli() {
     local platform=$1
     local file_extension=$2
     if [ "$PARAM_GH_CLI_VERSION" = "latest" ]; then
-        LATEST_TAG=$(curl url -s https://api.github.com/repos/cli/cli/releases/latest | jq -r '.tag_name')
+        max_retries=3
+        i=0
+        while (( i < max_retries )); do
+            ((i++))
+            LATEST_TAG=$(curl -s https://api.github.com/repos/cli/cli/releases/latest | jq -r '.tag_name')
+            if [ "$LATEST_TAG" != null ]; then
+                break
+            fi
+            echo "Couldn't get latest version, retrying..."
+            sleep 3
+        done
+        if (( i == max_retries )); then
+            echo "Erro: Max retries exceeded"
+            exit 1
+        fi
+
         PARAM_GH_CLI_VERSION="${LATEST_TAG#v}"
     fi
     local download_url="https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_${platform}.${file_extension}"
