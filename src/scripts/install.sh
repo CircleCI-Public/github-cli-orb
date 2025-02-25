@@ -32,7 +32,7 @@ download_gh_cli() {
     local platform=$1
     local file_extension=$2
     if [ "$PARAM_GH_CLI_VERSION" = "latest" ]; then
-        max_retries=3
+        max_retries=$PARAM_GH_MAX_RETRIES
         i=0
         while (( i < max_retries )); do
             ((i++))
@@ -44,7 +44,7 @@ download_gh_cli() {
             sleep 3
         done
         if (( i == max_retries )); then
-            echo "Erro: Max retries exceeded"
+            echo "Erro: Max retries exceeded. Last value found was $LATEST_TAG"
             exit 1
         fi
 
