@@ -14,11 +14,16 @@ parameters:
     type: integer
     default: 3
     description: Max of retries to do when the request to github releases fails.
+  debug:
+    type: boolean
+    default: false
+    description: Shows extra information about the installation.
 steps:
   - run:
       environment:
         PARAM_GH_CLI_VERSION: <<parameters.version>>
         PARAM_GH_MAX_RETRIES: <<parameters.max_retries>>
+        PARAM_GH_DEBUG: <<parameters.debug>>
       name: Install GH CLI v<<parameters.version>>
       command: <<include(scripts/install.sh)>>
       when: <<parameters.when>>

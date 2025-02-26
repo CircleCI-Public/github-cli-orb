@@ -44,7 +44,11 @@ download_gh_cli() {
             sleep 3
         done
         if (( i == max_retries )); then
-            echo "Erro: Max retries exceeded. Last value found was $LATEST_TAG"
+            echo "Error: Max retries exceeded."
+            if [ "$PARAM_GH_DEBUG" == 1 ]; then
+                echo "The request is getting:"
+                curl -s https://api.github.com/repos/cli/cli/releases/latest
+            fi
             exit 1
         fi
 
