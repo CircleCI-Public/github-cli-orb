@@ -41,14 +41,10 @@ download_gh_cli() {
                 break
             fi
             echo "Couldn't get latest version, retrying..."
-            sleep 10
+            sleep 60
         done
         if (( i == max_retries )); then
             echo "Error: Max retries exceeded."
-            if [ "$PARAM_GH_DEBUG" == 1 ]; then
-                echo "The request is getting:"
-                curl -s https://api.github.com/repos/cli/cli/releases/latest
-            fi
             exit 1
         fi
 
