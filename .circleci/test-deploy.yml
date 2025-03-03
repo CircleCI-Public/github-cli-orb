@@ -66,13 +66,15 @@ workflows:
               executor: ["docker-x86-debian", "apple-silicon-14", "apple-silicon-15", "linuxvm-arm-ubuntu-2004", "linuxvm-x86-ubuntu-2004", "linuxvm-arm-ubuntu-2204", "linuxvm-x86-ubuntu-2204", "linuxvm-arm-ubuntu-2404", "linuxvm-x86-ubuntu-2404"]
               version: [2.27.0, 2.40.0, "latest"] # 2.27.0 is the last version that uses ".tar.gz" instead of ".zip" for macOS
       - github-cli/release:
-          tag: "test-release-$CIRCLE_SHA1"
+          tag: "test-release"
           title: Test
           prerelease: true
           files: README.md
           context: orb-developer
           token: GHI_TOKEN
           additional_args: --generate-notes
+          post-steps:
+            - run: gh release delete test-release --cleanup-tag -y
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
