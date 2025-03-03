@@ -10,10 +10,16 @@ parameters:
     type: string
     default: "on_success"
     description: Specify when to run this command. Options are "on_success", "always" or "on_fail".
+  max_retries:
+    type: integer
+    default: 5
+    description: Max of retries to do when the request to github releases fails.
+
 steps:
   - run:
       environment:
         PARAM_GH_CLI_VERSION: <<parameters.version>>
+        PARAM_GH_MAX_RETRIES: <<parameters.max_retries>>
       name: Install GH CLI v<<parameters.version>>
       command: <<include(scripts/install.sh)>>
       when: <<parameters.when>>
