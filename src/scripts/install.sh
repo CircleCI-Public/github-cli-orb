@@ -41,7 +41,7 @@ download_gh_cli() {
                 break
             fi
             echo "Couldn't get latest version, retrying..."
-            sleep 3
+            sleep 10
         done
         if (( i == max_retries )); then
             echo "Error: Max retries exceeded."
