@@ -5,7 +5,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    gh: circleci/github-cli@2.6.0
+    gh: circleci/github-cli@2.8
   workflows:
     build_and_test:
       jobs:

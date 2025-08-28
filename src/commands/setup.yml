@@ -18,10 +18,16 @@ parameters:
     type: string
     default: "on_success"
     description: Specify when to run this command. Options are "on_success", "always" or "on_fail".
+  max_retries:
+    type: integer
+    default: 5
+    description: Max of retries to do when the request to github releases fails.
+
 steps:
   - install:
       version: <<parameters.version>>
       when: <<parameters.when>>
+      max_retries: <<parameters.max_retries>>
   - run:
       environment:
         PARAM_GH_TOKEN: <<parameters.token>>
