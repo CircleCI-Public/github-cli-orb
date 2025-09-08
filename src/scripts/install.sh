@@ -62,6 +62,7 @@ install_gh_cli() {
 }
 
 sudo=$(set_sudo)
+platform=$(detect_platform)
 
 # Check for required commands
 for cmd in curl tar; do
@@ -102,7 +103,6 @@ if [[ "$platform" == "macos_arm" ]] && version_le "$PARAM_GH_CLI_VERSION" "2.24.
   exit 1
 fi
 
-platform=$(detect_platform)
 if [ "$platform" == "unsupported" ]; then
     echo "$(uname -a)-$(uname -m) is not supported. If you believe it should be, please consider opening an issue."
     exit 1
