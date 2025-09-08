@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+LATEST_TAG=$(curl --fail --retry "$PARAM_GH_MAX_RETRIES" -Ls -o /dev/null -w '%{url_effective}' https://github.com/cli/cli/releases/latest | sed 's:.*/::')
 set_sudo() {
     if [[ $EUID == 0 ]]; then 
         echo ""
@@ -32,22 +32,6 @@ download_gh_cli() {
     local platform=$1
     local file_extension=$2
     if [ "$PARAM_GH_CLI_VERSION" = "latest" ]; then
-        max_retries=$PARAM_GH_MAX_RETRIES
-        i=0
-        while (( i < max_retries )); do
-            ((i++))
-            LATEST_TAG=$(curl -s https://api.github.com/repos/cli/cli/releases/latest | jq -r '.tag_name')
-            if [ "$LATEST_TAG" != null ]; then
-                break
-            fi
-            echo "Couldn't get latest version, retrying..."
-            sleep 60
-        done
-        if (( i == max_retries )); then
-            echo "Error: Max retries exceeded."
-            exit 1
-        fi
-
         PARAM_GH_CLI_VERSION="${LATEST_TAG#v}"
     fi
     local download_url="https://github.com/cli/cli/releases/download/v${PARAM_GH_CLI_VERSION}/gh_${PARAM_GH_CLI_VERSION}_${platform}.${file_extension}"
@@ -90,7 +74,25 @@ done
 # Verify if the CLI is already installed. Exit if it is.
 if command -v gh >/dev/null 2>&1; then
     echo "GH CLI is already installed."
-    exit 0
+    INSTALLED_VERSION=$(gh version | awk '{print $3}')
+    if [ "$PARAM_GH_CLI_VERSION" = "latest" ]; then
+        desired_v="$LATEST_TAG"
+    else
+        desired_v="$PARAM_GH_CLI_VERSION"
+    fi
+    major=$(printf "%s\n%s" "$desired_v" "$INSTALLED_VERSION" | sort -V | tail -1 )
+    if [ "$major" = "$INSTALLED_VERSION" ]; then
+        echo "GH CLI version installed is newer or equal to the desired. Not installing."
+        exit 0
+    else
+        echo "GH CLI version installed is older than desired. Reinstalling."
+        # Removing old version
+        if [ "$platform" == "linux_amd64" ]; then 
+            set -x; $sudo apt remove --yes gh; set +x
+        else
+            set -x; $sudo rm /usr/local/bin/gh; set +x
+        fi
+    fi
 fi
 
 # If the GH CLI version is less than or equal to 2.24.0 on macOS ARM then exit
