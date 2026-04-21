@@ -14,6 +14,7 @@ parameters:
     description: |
       Enter the name of the environment variable containing the GitHub Personal Access token to be used for authentication.
       It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
+      When `auth_method` is `app`, this env var is instead populated by `mint-app-token` with a short-lived installation token.
   when:
     type: string
     default: "on_success"
@@ -22,12 +23,65 @@ parameters:
     type: integer
     default: 5
     description: Max of retries to do when the request to github releases fails.
+  auth_method:
+    type: enum
+    enum: ["pat", "app"]
+    default: "pat"
+    description: >
+      How to authenticate. `pat` (default) reads the env var named by `token`.
+      `app` first mints a short-lived GitHub App installation access token (see
+      the `mint-app-token` command) into that same env var, then continues with
+      the normal configure step. The App params below are only consulted when
+      `auth_method: app`.
+  app_id:
+    type: env_var_name
+    default: "GITHUB_APP_ID"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  private_key:
+    type: env_var_name
+    default: "GITHUB_APP_PRIVATE_KEY"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  installation_id:
+    type: env_var_name
+    default: "GITHUB_APP_INSTALLATION_ID"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  installation_owner:
+    type: string
+    default: "$CIRCLE_PROJECT_USERNAME"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  installation_repo:
+    type: string
+    default: "$CIRCLE_PROJECT_REPONAME"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  permissions:
+    type: string
+    default: ""
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  repositories:
+    type: string
+    default: ""
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
 
 steps:
   - install:
       version: <<parameters.version>>
       when: <<parameters.when>>
       max_retries: <<parameters.max_retries>>
+  - when:
+      condition:
+        equal: ["app", <<parameters.auth_method>>]
+      steps:
+        - mint-app-token:
+            app_id: <<parameters.app_id>>
+            private_key: <<parameters.private_key>>
+            installation_id: <<parameters.installation_id>>
+            installation_owner: <<parameters.installation_owner>>
+            installation_repo: <<parameters.installation_repo>>
+            permissions: <<parameters.permissions>>
+            repositories: <<parameters.repositories>>
+            hostname: <<parameters.hostname>>
+            export_as: <<parameters.token>>
+            when: <<parameters.when>>
   - run:
       environment:
         PARAM_GH_TOKEN: <<parameters.token>>

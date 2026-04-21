@@ -61,11 +61,57 @@ parameters:
     type: boolean
     default: true
     description: Whether or not clone the repo. Defaults to true. Set to false if you already cloned the repo.
+  auth_method:
+    type: enum
+    enum: ["pat", "app"]
+    default: "pat"
+    description: >
+      How to authenticate. `pat` (default) uses the env var named by `token`.
+      `app` mints a short-lived GitHub App installation access token into that
+      env var before the `gh` CLI is configured. When using `app`, provide the
+      App context via `app_id` / `private_key` (and optionally the other
+      `installation_*` / scoping parameters below).
+  app_id:
+    type: env_var_name
+    default: "GITHUB_APP_ID"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  private_key:
+    type: env_var_name
+    default: "GITHUB_APP_PRIVATE_KEY"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  installation_id:
+    type: env_var_name
+    default: "GITHUB_APP_INSTALLATION_ID"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  installation_owner:
+    type: string
+    default: "$CIRCLE_PROJECT_USERNAME"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  installation_repo:
+    type: string
+    default: "$CIRCLE_PROJECT_REPONAME"
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  permissions:
+    type: string
+    default: ""
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
+  repositories:
+    type: string
+    default: ""
+    description: "Only used when auth_method is `app`. See `mint-app-token`."
 steps:
   - setup:
       version: <<parameters.version>>
       token: <<parameters.token>>
       hostname: <<parameters.hostname>>
+      auth_method: <<parameters.auth_method>>
+      app_id: <<parameters.app_id>>
+      private_key: <<parameters.private_key>>
+      installation_id: <<parameters.installation_id>>
+      installation_owner: <<parameters.installation_owner>>
+      installation_repo: <<parameters.installation_repo>>
+      permissions: <<parameters.permissions>>
+      repositories: <<parameters.repositories>>
   - when:
       condition: <<parameters.clone>>
       steps:
