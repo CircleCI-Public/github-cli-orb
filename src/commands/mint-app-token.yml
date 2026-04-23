@@ -1,0 +1,87 @@
+description: >
+  Mint a short-lived GitHub App installation access token and export it via
+  $BASH_ENV under the env var name given by `export_as` (default GITHUB_TOKEN).
+  The resulting token behaves identically to a PAT for `gh`, `git`, and the
+  GitHub REST/GraphQL APIs, but is scoped to the App's installation permissions
+  and expires within the hour.
+
+  Requires `jq`, `openssl`, and `curl`; the command will install them via
+  apt/apk/yum if missing.
+
+parameters:
+  app_id:
+    type: env_var_name
+    default: "GITHUB_APP_ID"
+    description: Env var containing the numeric GitHub App ID.
+  private_key:
+    type: env_var_name
+    default: "GITHUB_APP_PRIVATE_KEY"
+    description: >
+      Env var containing the App private key. Accepts either a raw PEM block
+      (literal "\n" sequences will be expanded to newlines) or a base64-encoded
+      PEM, which is how CircleCI contexts typically store multi-line secrets.
+  installation_id:
+    type: env_var_name
+    default: "GITHUB_APP_INSTALLATION_ID"
+    description: >
+      Env var holding a pinned installation id. If set and non-empty, it is
+      used directly. Otherwise the command discovers the installation using
+      `installation_owner` and `installation_repo`.
+  installation_owner:
+    type: string
+    default: "$CIRCLE_PROJECT_USERNAME"
+    description: Owner (user or org) to look up the App installation under.
+  installation_repo:
+    type: string
+    default: "$CIRCLE_PROJECT_REPONAME"
+    description: >
+      Repository used to discover the installation via
+      `GET /repos/:owner/:repo/installation`. Leave empty to fall back to
+      `GET /orgs/:owner/installation` for an org-wide installation.
+  permissions:
+    type: string
+    default: ""
+    description: >
+      Optional JSON object passed as the `permissions` field of
+      `POST /app/installations/:id/access_tokens`, used to narrow the token
+      below the installation's configured permissions. Example:
+      '{"contents":"write","pull_requests":"write"}'
+  repositories:
+    type: string
+    default: ""
+    description: >
+      Optional JSON array of repo names (not full owner/name) to scope the
+      token to. Example: '["github-cli-orb","orb-tools"]'
+  hostname:
+    type: string
+    default: "github.com"
+    description: >
+      Specify the hostname of the GitHub instance. For GitHub Enterprise
+      Server, API calls are routed to `https://<hostname>/api/v3`.
+  export_as:
+    type: env_var_name
+    default: "GITHUB_TOKEN"
+    description: >
+      Name of the env var to export the minted token into via $BASH_ENV.
+      Default matches the env var `gh/setup` reads, so chaining this command
+      before `gh/setup` works without further wiring.
+  when:
+    type: string
+    default: "on_success"
+    description: Specify when to run this command. Options are "on_success", "always" or "on_fail".
+
+steps:
+  - run:
+      name: Mint GitHub App installation token
+      environment:
+        PARAM_APP_ID: <<parameters.app_id>>
+        PARAM_PRIVATE_KEY: <<parameters.private_key>>
+        PARAM_INSTALLATION_ID: <<parameters.installation_id>>
+        PARAM_INSTALLATION_OWNER: <<parameters.installation_owner>>
+        PARAM_INSTALLATION_REPO: <<parameters.installation_repo>>
+        PARAM_PERMISSIONS: <<parameters.permissions>>
+        PARAM_REPOSITORIES: <<parameters.repositories>>
+        PARAM_HOSTNAME: <<parameters.hostname>>
+        PARAM_EXPORT_AS: <<parameters.export_as>>
+      command: <<include(scripts/mint-app-token.sh)>>
+      when: <<parameters.when>>

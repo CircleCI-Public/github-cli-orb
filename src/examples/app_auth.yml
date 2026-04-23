@@ -1,0 +1,50 @@
+description: >
+  Authenticate the GitHub CLI as a GitHub App installation instead of using a
+  long-lived Personal Access Token. The context stores `GITHUB_APP_ID` and
+  `GITHUB_APP_PRIVATE_KEY` (a base64-encoded PEM is typical, since CircleCI
+  contexts render awkwardly for multi-line secrets). A short-lived
+  installation access token is minted per job and exported as `GITHUB_TOKEN`,
+  scoped to the permissions configured on the App and expiring within the
+  hour. Works transparently with `gh/release`, `gh/clone`, and any step that
+  reads `$GITHUB_TOKEN`.
+usage:
+  version: "2.1"
+  orbs:
+    gh: circleci/github-cli@x.y
+  workflows:
+    release:
+      jobs:
+        - gh/release:
+            context: [github-app]
+            auth_method: app
+            tag: $CIRCLE_TAG
+            title: $CIRCLE_TAG
+            notes-file: changelog.md
+            filters:
+              tags:
+                only: /^v.*/
+              branches:
+                ignore: /.*/
+    # For non-`gh` use (e.g. pushing tags, curling the REST API), call
+    # `mint-app-token` directly. The minted token is exported as GITHUB_TOKEN
+    # via $BASH_ENV and is available to every subsequent step in the job.
+    push-tag:
+      jobs:
+        - create-and-push-tag:
+            context: [github-app]
+  jobs:
+    create-and-push-tag:
+      docker:
+        - image: cimg/base:stable
+      steps:
+        - checkout
+        - gh/mint-app-token
+        - run:
+            name: Push signed tag as the GitHub App
+            command: |
+              git config user.email "ci@users.noreply.github.com"
+              git config user.name  "ci"
+              git tag -a "v1.2.3" -m "Release v1.2.3"
+              git remote set-url origin \
+                "https://x-access-token:${GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git"
+              git push origin "v1.2.3"
