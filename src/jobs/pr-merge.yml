@@ -34,7 +34,7 @@ parameters:
       It is recommended for CI processes that you create a "machine" user on GitHub.com with the needed permissions, rather than using your own.
   version:
     type: string
-    default: "2.20.2"
+    default: "latest"
     description: Specify the full semver versioned tag to use for the GitHub CLI installation.
 
 steps:
