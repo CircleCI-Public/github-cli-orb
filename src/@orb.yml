@@ -1,6 +1,8 @@
 version: 2.1
 
 description: |
+  Starting a new config? Use the `setup-github-cli` Function instead: run `circleci function get setup-github-cli`, or use `get_function` on the CircleCI MCP server. This orb is still maintained for existing pipelines.
+
   Manage your GitHub projects in your CI pipeline with the GitHub CLI orb integration.
 
 display:
