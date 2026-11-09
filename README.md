@@ -4,6 +4,8 @@
 
 Utilize the GitHub CLI (gh) to maintain and manage your GitHub operations from within your CircleCI CI/CD pipeline.
 
+> **Starting a new config?** Use the [`setup-github-cli` Function](https://github.com/circleci-functions/setup-github-cli#readme) instead. See the [Functions overview](https://circleci.com/docs/functions/functions-intro/) and the [Functions catalog](https://circleci.com/docs/functions/functions-catalog/). This orb is still maintained for existing pipelines.
+
 ## Resources
 
 [CircleCI Orb Registry Page](https://circleci.com/developer/orbs/orb/circleci/github-cli) - The official registry page of this orb for all versions, executors, commands, and jobs described.

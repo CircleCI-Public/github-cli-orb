@@ -93,7 +93,7 @@ executors:
       - image: cimg/base:current
   apple-silicon-14:
     macos:
-      xcode: 14.3.1
+      xcode: 16.4.0
     resource_class: m4pro.medium
   apple-silicon-15:
     macos:
